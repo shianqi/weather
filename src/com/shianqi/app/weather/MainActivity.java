@@ -3,9 +3,11 @@ package com.shianqi.app.weather;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 import com.shianqi.app.weather.UI.PageOne;
@@ -42,6 +44,15 @@ public class MainActivity extends Activity {
 
         setDefaultFragment();
         addOnClickListener();
+
+        initState();
+    }
+
+    private void initState(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
     }
 
     private void setDefaultFragment()

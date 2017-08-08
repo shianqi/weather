@@ -10,7 +10,9 @@
         <activity
                 android:name="MainActivity"
                 android:label="@string/app_name"
-                android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+                android:clipToPadding="true"
+                android:fitsSystemWindows="true"
+                android:theme="@android:style/Theme.NoTitleBar">
         </activity>
 
         <activity
@@ -19,6 +21,8 @@
                 android:configChanges="keyboardHidden"
                 android:launchMode="standard"
                 android:screenOrientation="portrait"
+                android:clipToPadding="true"
+                android:fitsSystemWindows="true"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

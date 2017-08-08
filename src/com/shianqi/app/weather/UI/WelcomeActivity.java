@@ -12,7 +12,7 @@ import com.shianqi.app.weather.R;
  * Created by admin on 2017/8/8.
  */
 public class WelcomeActivity extends Activity {
-    private static final long DELAY_TIME = 2000;
+    private static final long DELAY_TIME = 1000;
     private static final int GOHOME = 1000;
 
     private Handler handler = new Handler() {
