@@ -11,4 +11,19 @@
             android:adjustViewBounds="true"
             android:background="@drawable/welcome_page"
             android:scaleType="centerCrop" />
+    <Button
+            android:id="@+id/skip_wait"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_corner"
+            android:textColor="#ffffff"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="@string/skip_wait"/>
 </RelativeLayout>
