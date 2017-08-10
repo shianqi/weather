@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
-import android.view.ViewGroup.LayoutParams;
 
 import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -21,11 +20,12 @@ import com.shianqi.app.weather.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class PageOne extends Fragment {
     private View view;
-    private NoScrollListview listView;
+    private NoScrollListView listView;
     private ArrayList<HashMap<String,Object>> listItem;
     private SimpleAdapter listAdapter;
     private PullToRefreshScrollView mPullRefreshScrollView;
@@ -50,7 +50,7 @@ public class PageOne extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_one, container, false);
-        listView = (NoScrollListview)view.findViewById(R.id.NoScrollListview);
+        listView = (NoScrollListView)view.findViewById(R.id.NoScrollListview);
 
         tmpTextView = (TextView)view.findViewById(R.id.weather_tmp);
         dirTextView = (TextView)view.findViewById(R.id.weather_dir);
@@ -64,8 +64,6 @@ public class PageOne extends Fragment {
 
         listView.setFocusable(false);
         listItem = new ArrayList<HashMap<String, Object>>();
-
-        getDate();
 
         listAdapter = new SimpleAdapter(getActivity(),listItem,
                 R.layout.list_items,
@@ -84,8 +82,6 @@ public class PageOne extends Fragment {
 
         listView.setAdapter(listAdapter);
 
-        //setListViewHeight();
-
         mPullRefreshScrollView = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
         mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
             @Override
@@ -95,19 +91,15 @@ public class PageOne extends Fragment {
             }
         });
 
+        WeatherService.WeatherInfo weatherInfo = WeatherService.getCacheWeatherInfo(getActivity());
+        if(weatherInfo!=null){
+            syncWeatherInfo(weatherInfo);
+        }
         return view;
     }
 
-
     private void getDate(){
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("list_item_date", "1");
-        map.put("list_item_beginning_time", "2");
-        map.put("list_item_time", "3");
-        map.put("list_item_score", "4");
-        listItem.add(map);
-        listItem.add(map);
-        listItem.add(map);
+
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, String[]> {
@@ -131,7 +123,7 @@ public class PageOne extends Fragment {
      * 获取温度信息
      */
     public void getWeatherInfo(){
-        WeatherService.getWeatherInfo("shenyang", new WeatherService.WeatherCallback() {
+        WeatherService.getWeatherInfo(getActivity(), "shenyang", new WeatherService.WeatherCallback() {
             @Override
             public void reject(Exception e) {
                 ToastManager.toast(getActivity(), "信息获取失败，请稍后尝试");
@@ -153,6 +145,20 @@ public class PageOne extends Fragment {
     public void syncWeatherInfo(WeatherService.WeatherInfo weatherInfo){
         List<WeatherService.HeWeather5Item> list = weatherInfo.HeWeather5;
         WeatherService.HeWeather5Item heWeather5Item  = list.get(0);
+
+        Iterator<WeatherService.DailyForecastItem> iterator =  heWeather5Item.daily_forecast.iterator();
+        listItem.clear();
+        while (iterator.hasNext()){
+            WeatherService.DailyForecastItem item = iterator.next();
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("list_item_date", item.date);
+            map.put("list_item_beginning_time", item.cond.txt_d);
+            map.put("list_item_time", "降水概率:" + item.pop + "%");
+            map.put("list_item_score", item.tmp.min + "/" + item.tmp.max);
+            listItem.add(map);
+        }
+        listAdapter.notifyDataSetChanged();
+
 
         tmpTextView.setText(heWeather5Item.now.tmp + "°");
         dirTextView.setText(heWeather5Item.now.wind.dir);

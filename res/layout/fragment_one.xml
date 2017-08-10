@@ -8,7 +8,7 @@
             xmlns:ptr="http://schemas.android.com/apk/res-auto"
             android:id="@+id/pull_refresh_scrollview"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             ptr:ptrHeaderBackground="#eeeeee"
             ptr:ptrHeaderTextColor="#333333"
             ptr:ptrHeaderTextAppearance="@android:attr/textAppearanceMedium"
@@ -136,7 +136,7 @@
                         android:layout_height="1dp" />
             </RelativeLayout>
 
-            <com.shianqi.app.weather.UI.NoScrollListview
+            <com.shianqi.app.weather.UI.NoScrollListView
                     android:id="@+id/NoScrollListview"
                     android:divider="@null"
                     android:listSelector="@android:color/transparent"

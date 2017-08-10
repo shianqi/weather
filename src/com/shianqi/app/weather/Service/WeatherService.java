@@ -1,9 +1,11 @@
 package com.shianqi.app.weather.Service;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.shianqi.app.weather.Utils.SharedPreferencesManager;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -20,6 +22,8 @@ public class WeatherService {
     private final static String key = "9df11e1434f44ac5ab00bb50128772e2";
     //全部天气
     private final static String url = "https://free-api.heweather.com/v5/weather";
+
+    private static SharedPreferencesManager manager;
 
     /**
      * 获取天气信息回调函数
@@ -227,9 +231,12 @@ public class WeatherService {
 
     private static OkHttpClient client = new OkHttpClient.Builder().build();
 
-    public static void getWeatherInfo(final String city, final WeatherCallback weatherCallback){
-
-
+    /**
+     * 获取天气信息
+     * @param city 城市
+     * @param weatherCallback 回调
+     */
+    public static void getWeatherInfo(final Context context, final String city, final WeatherCallback weatherCallback){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -252,20 +259,51 @@ public class WeatherService {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         final String body = response.body().string();
+                        cacheWeatherInfo(context, body);
                         Handler handler = new Handler(Looper.getMainLooper());
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Gson gson = new Gson();
-                                Type type = new TypeToken<WeatherInfo>() {}.getType();
-                                WeatherInfo weatherInfo = gson.fromJson(body, type);
-                                weatherCallback.resolve(weatherInfo);
+                                weatherCallback.resolve(analysisWeatherInfo(body));
                             }
                         });
                     }
                 });
             }
         }).start();
+    }
 
+    /**
+     * 将天气信息json解析为对象
+     * @param weatherInfoStr 天气信息（json）
+     * @return 天气对象
+     */
+    public static WeatherInfo analysisWeatherInfo(String weatherInfoStr){
+        Gson gson = new Gson();
+        Type type = new TypeToken<WeatherInfo>() {}.getType();
+        return gson.fromJson(weatherInfoStr, type);
+    }
+
+    /**
+     * 将天气信息写入缓存
+     * @param weatherInfoStr 天气信息（json字符串）
+     */
+    public static void cacheWeatherInfo(Context context, String weatherInfoStr){
+        if(manager == null){
+            manager = new SharedPreferencesManager(context);
+        }
+        manager.writeString("weather", weatherInfoStr);
+    }
+
+    /**
+     * 从缓存中提取天气信息
+     * @return 天气信息
+     */
+    public static WeatherInfo getCacheWeatherInfo(Context context){
+        if(manager == null){
+            manager = new SharedPreferencesManager(context);
+        }
+        String weatherInfoStr = manager.readString("weather");
+        return analysisWeatherInfo(weatherInfoStr);
     }
 }

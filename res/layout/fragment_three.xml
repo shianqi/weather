@@ -1,12 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:background="#00f06f"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <TextView
-            android:layout_width="fill_parent"
+    <LinearLayout
+            android:id="@+id/chat_top"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:orientation="vertical"
+            android:background="#222222">
+    </LinearLayout>
+    <LinearLayout
+            android:id="@+id/chat_menu"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/chat_top"
+            android:orientation="vertical"
+            android:background="#333333">
+    </LinearLayout>
+    <LinearLayout
+            android:id="@+id/chat_footer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:background="#f3f3f3">
+        <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_weight="4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="发送"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World~ Fragment3"
-    />
-</LinearLayout>
+            android:background="#eeeeee"
+            android:layout_below="@id/chat_menu"
+            android:layout_above="@id/chat_footer">
+        <ListView
+                android:id="@+id/message_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        </ListView>
+    </LinearLayout>
+</RelativeLayout>
