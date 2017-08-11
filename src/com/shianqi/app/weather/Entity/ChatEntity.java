@@ -1,53 +1,71 @@
 package com.shianqi.app.weather.Entity;
 
 /**
- * 聊天实体类
- * Created by admin on 2017/8/10.
+ * 聊天对象实体
+ * Created by admin on 2017/8/11.
  */
 public class ChatEntity {
-    public static final int TYPE_TEXT = 1001;
-    public static final int TYPE_IMG = 1002;
-
-    private int type;
-    private int owner;
-    private String time;
-
-    public ChatEntity(int type, int owner, String time, boolean comeMessage) {
-        this.type = type;
-        this.owner = owner;
-        this.time = time;
-        this.comeMessage = comeMessage;
+    public ChatEntity(int userId, String userImg, String userName, String content, String updateTime, int messageSize) {
+        this.userId = userId;
+        this.userImg = userImg;
+        this.userName = userName;
+        this.content = content;
+        this.updateTime = updateTime;
+        this.messageSize = messageSize;
     }
 
-    public String getTime() {
-        return time;
+    private int userId;
+    private String userImg;
+    private String userName;
+    private String content;
+    private String updateTime;
+    private int messageSize;
+
+    public int getUserId() {
+        return userId;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    private boolean comeMessage;
-
-    public int getType() {
-        return type;
+    public String getUserImg() {
+        return userImg;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setUserImg(String userImg) {
+        this.userImg = userImg;
     }
 
-    public int getOwner() {
-        return owner;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setOwner(int owner) {
-        this.owner = owner;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public boolean isComeMessage() {
-        return comeMessage;
+    public String getContent() {
+        return content;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public int getMessageSize() {
+        return messageSize;
+    }
+
+    public void setMessageSize(int messageSize) {
+        this.messageSize = messageSize;
+    }
 }

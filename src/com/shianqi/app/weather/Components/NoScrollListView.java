@@ -1,4 +1,4 @@
-package com.shianqi.app.weather.UI;
+package com.shianqi.app.weather.Components;
 
 import android.content.Context;
 import android.util.AttributeSet;

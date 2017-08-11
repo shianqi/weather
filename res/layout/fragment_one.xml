@@ -136,7 +136,7 @@
                         android:layout_height="1dp" />
             </RelativeLayout>
 
-            <com.shianqi.app.weather.UI.NoScrollListView
+            <com.shianqi.app.weather.Components.NoScrollListView
                     android:id="@+id/NoScrollListview"
                     android:divider="@null"
                     android:listSelector="@android:color/transparent"

@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/RelativeLayout01"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="3dip"
-        android:paddingBottom="3dip">
+        android:background="#dddddd"
+        android:layout_height="wrap_content">
     <ImageView
             android:id="@+id/chat_message_img"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:background="#ffffff"
             android:src="@drawable/ic_launcher"/>
     <TextView
             android:id="@+id/chat_message_username"
             android:layout_toEndOf="@id/chat_message_img"
             android:layout_width="wrap_content"
+            android:layout_alignTop="@id/chat_message_img"
             android:textColor="#111111"
             android:layout_height="wrap_content"/>
     <TextView
@@ -25,6 +26,11 @@
             android:layout_below="@id/chat_message_username"
             android:layout_width="wrap_content"
             android:textColor="#111111"
+            android:background="@drawable/message_box"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:textSize="26sp"
             android:layout_height="wrap_content"/>
 </RelativeLayout>

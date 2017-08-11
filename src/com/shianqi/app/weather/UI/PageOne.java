@@ -14,6 +14,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
+import com.shianqi.app.weather.Components.NoScrollListView;
 import com.shianqi.app.weather.Service.WeatherService;
 import com.shianqi.app.weather.Utils.ToastManager;
 import com.shianqi.app.weather.R;

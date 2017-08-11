@@ -5,10 +5,12 @@ import android.widget.TextView;
 
 /**
  *
- * Created by admin on 2017/8/10.
+ * Created by admin on 2017/8/11.
  */
 public class ChatHolder {
-    public TextView timeTextView;
+    public ImageView userImgImageView;
+    public TextView userNameTextView;
     public TextView contentTextView;
-    public ImageView userImageView;
+    public TextView updateTimeTextView;
+    public TextView messageCountTextView;
 }
