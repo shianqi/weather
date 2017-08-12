@@ -1,6 +1,7 @@
 package com.shianqi.app.weather.Components;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,20 +50,18 @@ public class MessageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         MessageHolder messageHolder = null;
-        if (view == null) {
-            messageHolder = new MessageHolder();
-            if (messageList.get(position).isComeMessage()) {
-                view = inflater.inflate(R.layout.come_message_item, null);
-            }else {
-                view = inflater.inflate(R.layout.to_message_item, null);
-            }
-            messageHolder.timeTextView = (TextView) view.findViewById(R.id.chat_message_username);
-            messageHolder.contentTextView = (TextView) view.findViewById(R.id.chat_message_text);
-            //messageHolder.userImageView = (ImageView) view.findViewById(R.id.iv_user_image);
-            view.setTag(messageHolder);
+
+        messageHolder = new MessageHolder();
+        if (messageList.get(position).isComeMessage()) {
+            view = inflater.inflate(R.layout.come_message_item, null);
         }else {
-            messageHolder = (MessageHolder)view.getTag();
+            view = inflater.inflate(R.layout.to_message_item, null);
         }
+        messageHolder.timeTextView = (TextView) view.findViewById(R.id.chat_message_username);
+        messageHolder.contentTextView = (TextView) view.findViewById(R.id.chat_message_text);
+        //messageHolder.userImageView = (ImageView) view.findViewById(R.id.iv_user_image);
+        view.setTag(messageHolder);
+
 
         MessageEntity messageEntity = messageList.get(position);
         if(messageEntity.getType() == MessageEntity.TYPE_TEXT){
@@ -72,8 +71,6 @@ public class MessageAdapter extends BaseAdapter {
         }else if(messageEntity.getType() == MessageEntity.TYPE_IMG){
 
         }
-
-
         return view;
     }
 
