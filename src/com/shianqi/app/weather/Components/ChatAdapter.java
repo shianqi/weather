@@ -10,13 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.shianqi.app.weather.Entity.ChatEntity;
 import com.shianqi.app.weather.Entity.ChatHolder;
-import com.shianqi.app.weather.MainActivity;
+import com.shianqi.app.weather.Entity.MessageEntity;
 import com.shianqi.app.weather.R;
 import com.shianqi.app.weather.UI.ChatActivity;
-import com.shianqi.app.weather.Utils.ToastManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 聊天窗口实体
@@ -67,7 +65,7 @@ public class ChatAdapter extends BaseAdapter{
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, ChatActivity.class);
-                    intent.putExtra("ChatID", chatList.get(position).getUserId());
+                    intent.putExtra("ChatID", chatList.get(position).getChatId());
                     context.startActivity(intent);
                 }
             });
@@ -80,13 +78,18 @@ public class ChatAdapter extends BaseAdapter{
         ChatEntity chatEntity = chatList.get(i);
 
         chatHolder.userImgImageView.setBackground(context.getResources().getDrawable(R.drawable.ic_launcher));
-        chatHolder.messageCountTextView.setText(chatEntity.getMessageSize()>99 ? "99+": chatEntity.getMessageSize() + "");
-        if(chatEntity.getMessageSize()<=0){
+        int unReadMessageSize = chatEntity.getUnreadMessageSize();
+        chatHolder.messageCountTextView.setText(unReadMessageSize>99 ? "99+": unReadMessageSize + "");
+        if(unReadMessageSize<=0){
             chatHolder.messageCountTextView.setVisibility(View.INVISIBLE);
         }
-        chatHolder.userNameTextView.setText(chatEntity.getUserName());
-        chatHolder.contentTextView.setText(chatEntity.getContent());
-        chatHolder.updateTimeTextView.setText(chatEntity.getUpdateTime());
+
+        MessageEntity lastMessageEntity = chatEntity.getLastMessageEntity();
+        String userEntityId = lastMessageEntity.getUserEntityId();
+
+        chatHolder.userNameTextView.setText(chatEntity.getUserMap().get(userEntityId).getUsername());
+        chatHolder.contentTextView.setText(chatEntity.getUnreadMessageSize());
+        chatHolder.updateTimeTextView.setText(lastMessageEntity.getSendTime());
         return view;
     }
 

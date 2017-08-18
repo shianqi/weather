@@ -1,33 +1,35 @@
 package com.shianqi.app.weather.Entity;
 
 /**
- * 聊天实体类
+ * 聊天消息实体类
  * Created by admin on 2017/8/10.
  */
 public class MessageEntity {
-    public static final int TYPE_TEXT = 1001;
-    public static final int TYPE_IMG = 1002;
+    //文本消息
+    public static final int TYPE_TEXT = 1000;
+    //图片消息
+    public static final int TYPE_IMG = 1001;
+    //文件消息
+    public static final int TYPE_FILE = 1002;
+
+    public static final String HAVE_READ = "1";
+    public static final String UN_READ = "0";
 
     private int type;
-    private int owner;
-    private String time;
+    private String id;
+    private String userEntityId;
+    private String chatId;
+    private String sendTime;
+    private String haveRead;
+    private String sendState;
 
-    public MessageEntity(int type, int owner, String time, boolean comeMessage) {
+    public MessageEntity(int type, String id, String userEntityId, String chatId, String sendTime) {
         this.type = type;
-        this.owner = owner;
-        this.time = time;
-        this.comeMessage = comeMessage;
+        this.id = id;
+        this.chatId = chatId;
+        this.userEntityId = userEntityId;
+        this.sendTime = sendTime;
     }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    private boolean comeMessage;
 
     public int getType() {
         return type;
@@ -37,17 +39,51 @@ public class MessageEntity {
         this.type = type;
     }
 
-    public int getOwner() {
-        return owner;
+    public String getId() {
+        return id;
     }
 
-    public void setOwner(int owner) {
-        this.owner = owner;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public boolean isComeMessage() {
-        return comeMessage;
+    public String getUserEntityId() {
+        return userEntityId;
     }
 
+    public void setUserEntityId(String userEntityId) {
+        this.userEntityId = userEntityId;
+    }
 
+    public String getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(String sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getHaveRead() {
+        return haveRead;
+    }
+
+    public void setHaveRead(String haveRead) {
+        this.haveRead = haveRead;
+    }
+
+    public String getSendState() {
+        return sendState;
+    }
+
+    public void setSendState(String sendState) {
+        this.sendState = sendState;
+    }
 }

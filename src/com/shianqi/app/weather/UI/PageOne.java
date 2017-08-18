@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 
@@ -47,6 +49,8 @@ public class PageOne extends Fragment {
     //概况
     private TextView weather_txt_d;
 
+    private WebView webview;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +65,18 @@ public class PageOne extends Fragment {
         weather_aqi = (TextView)view.findViewById(R.id.weather_aqi);
         weather_city = (TextView)view.findViewById(R.id.weather_city);
         weather_txt_d = (TextView)view.findViewById(R.id.weather_txt_d);
+        webview = (WebView)view. findViewById(R.id.weather_webview);
 
+        WebSettings webSettings = webview.getSettings();
+        //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setSupportZoom(false);
+        webSettings.setAllowFileAccess(true); //设置可以访问文件
+        webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
+        webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
+
+        webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webview.loadUrl("file:///android_asset/index.html");
 
         listView.setFocusable(false);
         listItem = new ArrayList<HashMap<String, Object>>();

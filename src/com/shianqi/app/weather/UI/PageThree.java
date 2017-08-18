@@ -12,12 +12,13 @@ import com.shianqi.app.weather.Entity.ChatList;
 import com.shianqi.app.weather.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class PageThree extends Fragment {
     private View view;
     private ListView listView;
-    private ArrayList<ChatEntity> listItem;
+    private HashMap<String, ChatEntity> listMap;
     private ChatAdapter listAdapter;
 
     @Override
@@ -25,9 +26,11 @@ public class PageThree extends Fragment {
         view =  inflater.inflate(R.layout.fragment_three, container, false);
 
         listView = (ListView) view.findViewById(R.id.chat_list);
-        listItem = ChatList.getChatList();
+        listMap = ChatList.getChatList();
 
-        listAdapter = new ChatAdapter(getActivity(), listItem);
+        ArrayList<ChatEntity> list = new ArrayList<ChatEntity>();
+
+        listAdapter = new ChatAdapter(getActivity(), list);
         listView.setAdapter(listAdapter);
 
         listAdapter.notifyDataSetChanged();
