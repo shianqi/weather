@@ -28,6 +28,23 @@
                         android:layout_height="match_parent" >
                 </WebView>
 
+                <Button
+                        android:id="@+id/add_position"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="30sp"
+                        android:layout_marginEnd="30sp"
+                        android:background="@android:color/transparent"
+                        android:textColor="#ffffff"
+                        android:textSize="30sp"
+                        android:shadowColor="#bbbbbb"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:shadowRadius="3"
+                        android:text="+"/>
+
                 <RelativeLayout android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
                     <TextView

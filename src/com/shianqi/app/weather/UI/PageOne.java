@@ -1,13 +1,16 @@
 package com.shianqi.app.weather.UI;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 
@@ -17,6 +20,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import com.shianqi.app.weather.Components.NoScrollListView;
+import com.shianqi.app.weather.MainActivity;
 import com.shianqi.app.weather.Service.WeatherService;
 import com.shianqi.app.weather.Utils.ToastManager;
 import com.shianqi.app.weather.R;
@@ -51,6 +55,8 @@ public class PageOne extends Fragment {
 
     private WebView webview;
 
+    private Button add_position;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,17 +72,17 @@ public class PageOne extends Fragment {
         weather_city = (TextView)view.findViewById(R.id.weather_city);
         weather_txt_d = (TextView)view.findViewById(R.id.weather_txt_d);
         webview = (WebView)view. findViewById(R.id.weather_webview);
+        add_position = (Button)view.findViewById(R.id.add_position);
 
-        WebSettings webSettings = webview.getSettings();
-        //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setSupportZoom(false);
-        webSettings.setAllowFileAccess(true); //设置可以访问文件
-        webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
-        webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
-
-        webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webview.loadUrl("file:///android_asset/index.html");
+        add_position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CityManageActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_from_top, R.anim.slide_out_to_bottom);
+            }
+        });
+        configWebView();
 
         listView.setFocusable(false);
         listItem = new ArrayList<HashMap<String, Object>>();
@@ -112,6 +118,21 @@ public class PageOne extends Fragment {
             syncWeatherInfo(weatherInfo);
         }
         return view;
+    }
+
+    private void configWebView(){
+        WebSettings webSettings = webview.getSettings();
+        //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setSupportZoom(false);
+        webSettings.setAllowFileAccess(true); //设置可以访问文件
+        webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
+        webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
+
+        webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webview.setHorizontalScrollBarEnabled(false);//水平不显示
+        webview.setVerticalScrollBarEnabled(false); //垂直不显示
+        webview.loadUrl("file:///android_asset/index.html");
     }
 
     private void getDate(){
