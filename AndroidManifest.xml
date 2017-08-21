@@ -28,7 +28,7 @@
     <application
             android:label="@string/app_name"
             android:icon="@drawable/ic_launcher">
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="您的Key">
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="73f2fbd70510a2356e27dff938ac4089">
         </meta-data>
         <activity
                 android:name="MainActivity"
@@ -49,6 +49,14 @@
 
         <activity
                 android:name=".UI.CityManageActivity"
+                android:label="@string/city_manage"
+                android:clipToPadding="true"
+                android:fitsSystemWindows="true"
+                android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
+        <activity
+                android:name=".UI.AddCityActivity"
                 android:label="@string/city_manage"
                 android:clipToPadding="true"
                 android:fitsSystemWindows="true"
