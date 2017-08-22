@@ -169,8 +169,8 @@ public class PageOne extends Fragment {
             }
 
             @Override
-            public void resolve(WeatherService.WeatherInfo weatherInfo) {
-                syncWeatherInfo(weatherInfo);
+            public void resolve(String weatherInfoString) {
+                syncWeatherInfo(WeatherService.analysisWeatherInfo(weatherInfoString));
             }
         });
     }

@@ -62,7 +62,7 @@
     </RelativeLayout>
     <ListView
             android:id="@+id/add_city_list_view"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/add_city_title"

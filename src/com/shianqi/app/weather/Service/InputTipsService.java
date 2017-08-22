@@ -56,7 +56,7 @@ public class InputTipsService {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Request request = new Request.Builder().url(url+"?key="+key+"&keywords="+keywords).build();
+                Request request = new Request.Builder().url(url+"?key="+key+"&type=190104|190105&keywords="+keywords).build();
 
                 Call call = client.newCall(request);
                 call.enqueue(new Callback() {
@@ -79,7 +79,6 @@ public class InputTipsService {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Log.e("1", body);
                                 inputTipsCallback.resolve(analysisInputTipsInfo(body));
                             }
                         });

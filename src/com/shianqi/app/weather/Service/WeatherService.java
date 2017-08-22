@@ -30,7 +30,7 @@ public class WeatherService {
      */
     public static interface WeatherCallback{
         public void reject(Exception e);
-        public void resolve(WeatherInfo weatherInfo);
+        public void resolve(String weatherInfoString);
     }
 
     /**
@@ -264,7 +264,7 @@ public class WeatherService {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                weatherCallback.resolve(analysisWeatherInfo(body));
+                                weatherCallback.resolve(body);
                             }
                         });
                     }

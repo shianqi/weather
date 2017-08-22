@@ -6,16 +6,23 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.shianqi.app.weather.Components.AddCityListViewAdapter;
 import com.shianqi.app.weather.R;
 import com.shianqi.app.weather.Service.InputTipsService;
+import com.shianqi.app.weather.Service.SqlLiteService;
 import com.shianqi.app.weather.Utils.ToastManager;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 添加位置页面
@@ -23,14 +30,22 @@ import com.shianqi.app.weather.Utils.ToastManager;
  */
 public class AddCityActivity extends Activity {
     private EditText editText;
+    private List listItem;
+    private ListView listView;
+    private AddCityListViewAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_city_activity);
 
-        editText = (EditText)findViewById(R.id.add_city_input);
+        listView = (ListView)findViewById(R.id.add_city_list_view);
+        listItem = new ArrayList<InputTipsService.Tips>();
+        adapter = new AddCityListViewAdapter(AddCityActivity.this, listItem);
+        listView.setAdapter(adapter);
 
+        editText = (EditText)findViewById(R.id.add_city_input);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -53,7 +68,12 @@ public class AddCityActivity extends Activity {
 
                     @Override
                     public void resolve(InputTipsService.InputTipsInfo inputTipsInfo) {
-                        ToastManager.toast(AddCityActivity.this, inputTipsInfo.tips.size()+"");
+                        listItem.clear();
+                        for(int i=0;i<inputTipsInfo.tips.size();i++){
+                            listItem.add(inputTipsInfo.tips.get(i));
+                        }
+                        ToastManager.toast(AddCityActivity.this, listItem.size()+"");
+                        adapter.notifyDataSetChanged();
                     }
                 });
             }
@@ -97,5 +117,14 @@ public class AddCityActivity extends Activity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            AddCityActivity.this.finish();
+            overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
