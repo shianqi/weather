@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class InputTipsService {
     private static OkHttpClient client = new OkHttpClient.Builder().build();
-    private static final String url = "http://restapi.amap.com/v3/assistant/inputtips";
+    private static final String url = "http://restapi.amap.com/v3/geocode/geo";
     private static final String key = "f680d43f581acb4ab72f91a10984e4c1";
 
     public static interface InputTipsCallback{
@@ -32,17 +32,32 @@ public class InputTipsService {
         public String count;
         public String info;
         public String infocode;
-        public List<Tips> tips;
+        public List<Tips> geocodes;
     }
 
     public static class Tips {
-        public Object id;
-        public String name;
-        public String district;
-        public String adcode;
-        public Object location;
-        public Object address;
-        public String typecode;
+        public String formatted_address;
+        public String province;
+        public String citycode;
+        public Object city;
+        public Object district;
+        public String location;
+
+        public String getDistrict(){
+            if(district!=null && !district.toString().equals("[]")){
+                return district.toString();
+            }else{
+                return getCity();
+            }
+        }
+
+        public String getCity(){
+            if(city!=null && !city.toString().equals("[]")){
+                return city.toString();
+            }else{
+                return province;
+            }
+        }
     }
 
 
@@ -52,11 +67,11 @@ public class InputTipsService {
         return gson.fromJson(inputTipsInfoStr, type);
     }
 
-    public static void getInputTipsInfo(final Context context, final String keywords, final InputTipsCallback inputTipsCallback){
+    public static void getInputTipsInfo(final Context context, final String address, final InputTipsCallback inputTipsCallback){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Request request = new Request.Builder().url(url+"?key="+key+"&type=190104|190105&keywords="+keywords).build();
+                Request request = new Request.Builder().url(url+"?key="+key+"&address="+address).build();
 
                 Call call = client.newCall(request);
                 call.enqueue(new Callback() {
@@ -79,7 +94,13 @@ public class InputTipsService {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                inputTipsCallback.resolve(analysisInputTipsInfo(body));
+                                InputTipsInfo info = analysisInputTipsInfo(body);
+                                if(info.status.equals("0")){
+                                    inputTipsCallback.resolve(null);
+                                }else{
+                                    inputTipsCallback.resolve(info);
+                                }
+
                             }
                         });
                     }

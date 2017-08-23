@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import com.shianqi.app.weather.Entity.AddCityListViewHolder;
 import com.shianqi.app.weather.Entity.LocationWeatherEntity;
@@ -16,7 +15,6 @@ import com.shianqi.app.weather.Service.WeatherService;
 import com.shianqi.app.weather.Utils.ToastManager;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by admin on 2017/8/22.
@@ -26,10 +24,16 @@ public class AddCityListViewAdapter extends BaseAdapter {
     private List<InputTipsService.Tips> tips;
     private LayoutInflater inflater = null;
     private SqlLiteService sqlLiteService;
+    private Callback callback;
 
-    public AddCityListViewAdapter(Context context, List<InputTipsService.Tips> tips) {
+    public static interface Callback{
+        public void close();
+    }
+
+    public AddCityListViewAdapter(Context context, List<InputTipsService.Tips> tips, Callback callback) {
         this.context = context;
         this.tips = tips;
+        this.callback = callback;
         sqlLiteService = new SqlLiteService(context);
         inflater = LayoutInflater.from(this.context);
     }
@@ -69,15 +73,14 @@ public class AddCityListViewAdapter extends BaseAdapter {
             addCityListViewHolder = (AddCityListViewHolder)view.getTag();
         }
         addCityListViewHolder.location.setText(
-                ((InputTipsService.Tips)getItem(i)).name + "-" +
-                        ((InputTipsService.Tips)getItem(i)).district
+                ((InputTipsService.Tips)getItem(i)).formatted_address
         );
         return view;
     }
 
     public void getWeather(int i) {
         final InputTipsService.Tips tip = tips.get(i);
-        WeatherService.getWeatherInfo(context, tip.name, new WeatherService.WeatherCallback() {
+        WeatherService.getWeatherInfo(context, tip.getCity(), new WeatherService.WeatherCallback() {
             @Override
             public void reject(Exception e) {
                 ToastManager.toast(context, "获取天气信息失败，请检查网络连接");
@@ -85,13 +88,23 @@ public class AddCityListViewAdapter extends BaseAdapter {
 
             @Override
             public void resolve(String weatherInfoString) {
-                LocationWeatherEntity entity = new LocationWeatherEntity();
-                entity.setGd_name(tip.name);
-                entity.setGd_district(tip.district);
-                entity.setGd_adcode(tip.adcode);
-                entity.setHf_weather(weatherInfoString);
-                entity.setIsLocation(LocationWeatherEntity.NOT_LOCATION);
-                sqlLiteService.saveOrUpdateLocationInfo(entity);
+                WeatherService.WeatherInfo weatherInfo = WeatherService.analysisWeatherInfo(weatherInfoString);
+                ToastManager.toast(context, weatherInfo.HeWeather5.get(0).status);
+                if(weatherInfo.HeWeather5.get(0).status.equals("ok")){
+                    LocationWeatherEntity entity = new LocationWeatherEntity();
+                    entity.setFormatted_address(tip.formatted_address);
+                    entity.setGd_province(tip.province);
+                    entity.setGd_city(tip.getCity());
+                    entity.setGd_district(tip.getDistrict());
+                    entity.setIsLocation(LocationWeatherEntity.NOT_LOCATION);
+                    entity.setIsLocation(tip.location);
+                    entity.setHf_weather(weatherInfoString);
+                    sqlLiteService.saveOrUpdateLocationInfo(entity);
+
+                    callback.close();
+                }else{
+                    ToastManager.toast(context, "暂无此城市天气数据");
+                }
             }
         });
     }

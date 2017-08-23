@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,15 @@ import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 
 import android.widget.TextView;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import com.shianqi.app.weather.Components.NoScrollListView;
 import com.shianqi.app.weather.MainActivity;
+import com.shianqi.app.weather.Service.PositionService;
 import com.shianqi.app.weather.Service.WeatherService;
 import com.shianqi.app.weather.Utils.ToastManager;
 import com.shianqi.app.weather.R;
@@ -61,8 +65,18 @@ public class PageOne extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_one, container, false);
-        listView = (NoScrollListView)view.findViewById(R.id.NoScrollListview);
 
+        findView(view);
+        configWebView();
+        initListView();
+        setListener();
+        getWeatherInfoByCache();
+        getWeatherByLocationInfo();
+        return view;
+    }
+
+    private void findView(View view) {
+        listView = (NoScrollListView)view.findViewById(R.id.NoScrollListview);
         tmpTextView = (TextView)view.findViewById(R.id.weather_tmp);
         dirTextView = (TextView)view.findViewById(R.id.weather_dir);
         scTextView = (TextView)view.findViewById(R.id.weather_sc);
@@ -73,20 +87,12 @@ public class PageOne extends Fragment {
         weather_txt_d = (TextView)view.findViewById(R.id.weather_txt_d);
         webview = (WebView)view. findViewById(R.id.weather_webview);
         add_position = (Button)view.findViewById(R.id.add_position);
+        mPullRefreshScrollView = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
+    }
 
-        add_position.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CityManageActivity.class);
-                getActivity().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_from_top, R.anim.slide_out_to_bottom);
-            }
-        });
-        configWebView();
-
+    private void initListView() {
         listView.setFocusable(false);
         listItem = new ArrayList<HashMap<String, Object>>();
-
         listAdapter = new SimpleAdapter(getActivity(),listItem,
                 R.layout.list_items,
                 new String[]{
@@ -101,10 +107,18 @@ public class PageOne extends Fragment {
                         R.id.list_item_time,
                         R.id.list_item_score
                 });
-
         listView.setAdapter(listAdapter);
+    }
 
-        mPullRefreshScrollView = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
+    private void setListener() {
+        add_position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CityManageActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_from_top, R.anim.slide_out_to_bottom);
+            }
+        });
         mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
@@ -112,12 +126,6 @@ public class PageOne extends Fragment {
                 //ToastManager.toast(getActivity(), "success!");
             }
         });
-
-        WeatherService.WeatherInfo weatherInfo = WeatherService.getCacheWeatherInfo(getActivity());
-        if(weatherInfo!=null){
-            syncWeatherInfo(weatherInfo);
-        }
-        return view;
     }
 
     private void configWebView(){
@@ -135,10 +143,6 @@ public class PageOne extends Fragment {
         webview.loadUrl("file:///android_asset/index.html");
     }
 
-    private void getDate(){
-
-    }
-
     private class GetDataTask extends AsyncTask<Void, Void, String[]> {
 
         @Override
@@ -153,6 +157,26 @@ public class PageOne extends Fragment {
             // Do some stuff here
             // Call onRefreshComplete when the list has been refreshed.
             super.onPostExecute(result);
+        }
+    }
+
+    public void getWeatherByLocationInfo() {
+        PositionService.getPositionInfo(getActivity(), new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if (aMapLocation != null) {
+                    if (aMapLocation.getErrorCode() == 0) {
+                        getWeatherInfo();
+                    }
+                }
+            }
+        });
+    }
+
+    private void getWeatherInfoByCache() {
+        WeatherService.WeatherInfo weatherInfo = WeatherService.getCacheWeatherInfo(getActivity());
+        if(weatherInfo!=null){
+            syncWeatherInfo(weatherInfo);
         }
     }
 
@@ -201,8 +225,8 @@ public class PageOne extends Fragment {
         dirTextView.setText(heWeather5Item.now.wind.dir);
         scTextView.setText(heWeather5Item.now.wind.sc + "级");
         humTextView.setText(heWeather5Item.now.hum + "%");
-        weather_qlty.setText(heWeather5Item.aqi.city.qlty);
-        weather_aqi.setText(heWeather5Item.aqi.city.aqi);
+        weather_qlty.setText(heWeather5Item.getAqiCityQlty());
+        weather_aqi.setText(heWeather5Item.getAqiCityAqi());
         weather_city.setText(heWeather5Item.basic.city + " | ");
         weather_txt_d.setText(heWeather5Item.now.cond.txt);
 

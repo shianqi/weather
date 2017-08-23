@@ -111,6 +111,22 @@ public class WeatherService {
         public Now now;
         public String status;
         public Suggestion suggestion;
+
+        public String getAqiCityQlty() {
+            if(aqi!=null && aqi.city!=null && aqi.city.qlty!=null){
+                return aqi.city.qlty;
+            }else{
+                return "-";
+            }
+        }
+
+        public String getAqiCityAqi() {
+            if(aqi!=null && aqi.city!=null && aqi.city.aqi!=null){
+                return aqi.city.aqi;
+            }else{
+                return "-";
+            }
+        }
     }
 
     public static class Aqi{

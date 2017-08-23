@@ -18,6 +18,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.shianqi.app.weather.Components.AddCityListViewAdapter;
 import com.shianqi.app.weather.R;
 import com.shianqi.app.weather.Service.InputTipsService;
+import com.shianqi.app.weather.Service.PositionService;
 import com.shianqi.app.weather.Service.SqlLiteService;
 import com.shianqi.app.weather.Utils.ToastManager;
 
@@ -42,7 +43,12 @@ public class AddCityActivity extends Activity {
 
         listView = (ListView)findViewById(R.id.add_city_list_view);
         listItem = new ArrayList<InputTipsService.Tips>();
-        adapter = new AddCityListViewAdapter(AddCityActivity.this, listItem);
+        adapter = new AddCityListViewAdapter(AddCityActivity.this, listItem, new AddCityListViewAdapter.Callback() {
+            @Override
+            public void close() {
+                exit();
+            }
+        });
         listView.setAdapter(adapter);
 
         editText = (EditText)findViewById(R.id.add_city_input);
@@ -69,8 +75,11 @@ public class AddCityActivity extends Activity {
                     @Override
                     public void resolve(InputTipsService.InputTipsInfo inputTipsInfo) {
                         listItem.clear();
-                        for(int i=0;i<inputTipsInfo.tips.size();i++){
-                            listItem.add(inputTipsInfo.tips.get(i));
+                        if(inputTipsInfo==null || inputTipsInfo.count.equals("0")){
+                            return;
+                        }
+                        for(int i=0;i<inputTipsInfo.geocodes.size();i++){
+                            listItem.add(inputTipsInfo.geocodes.get(i));
                         }
                         ToastManager.toast(AddCityActivity.this, listItem.size()+"");
                         adapter.notifyDataSetChanged();
@@ -83,15 +92,7 @@ public class AddCityActivity extends Activity {
     }
 
     private void getPosition() {
-        //声明AMapLocationClient类对象
-        AMapLocationClient mLocationClient = null;
-        //声明AMapLocationClientOption对象
-        AMapLocationClientOption mLocationOption = null;
-        //初始化AMapLocationClientOption对象
-        mLocationOption = new AMapLocationClientOption();
-        mLocationOption.setOnceLocation(true);
-        //声明定位回调监听器
-        AMapLocationListener mLocationListener = new AMapLocationListener() {
+        PositionService.getPositionInfo(getApplicationContext(), new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
                 if (aMapLocation != null) {
@@ -100,16 +101,7 @@ public class AddCityActivity extends Activity {
                     }
                 }
             }
-        };
-        //初始化定位
-        mLocationClient = new AMapLocationClient(getApplicationContext());
-        //
-        mLocationClient.setLocationOption(mLocationOption);
-        //设置定位回调监听
-        mLocationClient.setLocationListener(mLocationListener);
-        //启动定位
-        mLocationClient.startLocation();
-        //异步获取定位结果
+        });
     }
 
     private void initState(){
@@ -122,9 +114,13 @@ public class AddCityActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            AddCityActivity.this.finish();
-            overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top);
+            exit();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void exit() {
+        AddCityActivity.this.finish();
+        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top);
     }
 }
