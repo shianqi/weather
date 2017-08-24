@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -25,12 +23,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import com.shianqi.app.weather.Components.NoScrollListView;
 import com.shianqi.app.weather.Entity.LocationWeatherEntity;
-import com.shianqi.app.weather.MainActivity;
 import com.shianqi.app.weather.Service.InputTipsService;
 import com.shianqi.app.weather.Service.PositionService;
 import com.shianqi.app.weather.Service.SqlLiteService;
 import com.shianqi.app.weather.Service.WeatherService;
-import com.shianqi.app.weather.Utils.SharedPreferencesManager;
 import com.shianqi.app.weather.Utils.ToastManager;
 import com.shianqi.app.weather.R;
 
@@ -66,6 +62,24 @@ public class PageOne extends Fragment {
 
     private Button add_position;
 
+    private TextView suggest_item_title1;
+    private TextView suggest_item_title2;
+    private TextView suggest_item_title3;
+    private TextView suggest_item_title4;
+    private TextView suggest_item_title5;
+    private TextView suggest_item_title6;
+    private TextView suggest_item_title7;
+    private TextView suggest_item_title8;
+
+    private TextView suggest_item_text1;
+    private TextView suggest_item_text2;
+    private TextView suggest_item_text3;
+    private TextView suggest_item_text4;
+    private TextView suggest_item_text5;
+    private TextView suggest_item_text6;
+    private TextView suggest_item_text7;
+    private TextView suggest_item_text8;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +107,25 @@ public class PageOne extends Fragment {
         weather_txt_d = (TextView)view.findViewById(R.id.weather_txt_d);
         webview = (WebView)view. findViewById(R.id.weather_webview);
         add_position = (Button)view.findViewById(R.id.add_position);
+
+        suggest_item_title1 = (TextView)view.findViewById(R.id.suggest_item_title1);
+        suggest_item_title2 = (TextView)view.findViewById(R.id.suggest_item_title2);
+        suggest_item_title3 = (TextView)view.findViewById(R.id.suggest_item_title3);
+        suggest_item_title4 = (TextView)view.findViewById(R.id.suggest_item_title4);
+        suggest_item_title5 = (TextView)view.findViewById(R.id.suggest_item_title5);
+        suggest_item_title6 = (TextView)view.findViewById(R.id.suggest_item_title6);
+        suggest_item_title7 = (TextView)view.findViewById(R.id.suggest_item_title7);
+        suggest_item_title8 = (TextView)view.findViewById(R.id.suggest_item_title8);
+
+        suggest_item_text1 = (TextView)view.findViewById(R.id.suggest_item_text1);
+        suggest_item_text2 = (TextView)view.findViewById(R.id.suggest_item_text2);
+        suggest_item_text3 = (TextView)view.findViewById(R.id.suggest_item_text3);
+        suggest_item_text4 = (TextView)view.findViewById(R.id.suggest_item_text4);
+        suggest_item_text5 = (TextView)view.findViewById(R.id.suggest_item_text5);
+        suggest_item_text6 = (TextView)view.findViewById(R.id.suggest_item_text6);
+        suggest_item_text7 = (TextView)view.findViewById(R.id.suggest_item_text7);
+        suggest_item_text8 = (TextView)view.findViewById(R.id.suggest_item_text8);
+
         mPullRefreshScrollView = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
 
         tmpTextView.setTypeface(numberTypeface);
@@ -102,18 +135,18 @@ public class PageOne extends Fragment {
         listView.setFocusable(false);
         listItem = new ArrayList<HashMap<String, Object>>();
         listAdapter = new SimpleAdapter(getActivity(),listItem,
-                R.layout.list_items,
+                R.layout.future_weather_list_item,
                 new String[]{
-                        "list_item_date",
-                        "list_item_beginning_time",
-                        "list_item_time",
-                        "list_item_score"
+                        "future_weather_day",
+                        "future_weather_icon",
+                        "future_weather_info",
+                        "future_weather_range"
                 },
                 new int[]{
-                        R.id.list_item_date,
-                        R.id.list_item_beginning_time,
-                        R.id.list_item_time,
-                        R.id.list_item_score
+                        R.id.future_weather_day,
+                        R.id.future_weather_icon,
+                        R.id.future_weather_info,
+                        R.id.future_weather_range
                 });
         listView.setAdapter(listAdapter);
     }
@@ -252,13 +285,15 @@ public class PageOne extends Fragment {
 
         Iterator<WeatherService.DailyForecastItem> iterator =  heWeather5Item.daily_forecast.iterator();
         listItem.clear();
+        String[] day = {"今天","明天","后天"};
+        int dayIndex = 0;
         while (iterator.hasNext()){
             WeatherService.DailyForecastItem item = iterator.next();
             HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("list_item_date", item.date);
-            map.put("list_item_beginning_time", item.cond.txt_d);
-            map.put("list_item_time", "降水概率:" + item.pop + "%");
-            map.put("list_item_score", item.tmp.min + "/" + item.tmp.max);
+            map.put("future_weather_day", day[dayIndex++]);
+            map.put("future_weather_icon", item.cond.txt_d);
+            map.put("future_weather_info", item.cond.txt_d + " | " + item.wind.sc);
+            map.put("future_weather_range", item.tmp.min + "° /" + item.tmp.max+"°");
             listItem.add(map);
         }
         listAdapter.notifyDataSetChanged();
@@ -268,10 +303,28 @@ public class PageOne extends Fragment {
         dirTextView.setText(heWeather5Item.now.wind.dir);
         scTextView.setText(heWeather5Item.getNowWindSc() + "级");
         humTextView.setText(heWeather5Item.now.hum + "%");
-        weather_qlty.setText(heWeather5Item.getAqiCityQlty());
+        weather_qlty.setText("空气质量：" + heWeather5Item.getAqiCityQlty());
         weather_aqi.setText(heWeather5Item.getAqiCityAqi());
         weather_city.setText(heWeather5Item.basic.city + " | ");
         weather_txt_d.setText(heWeather5Item.now.cond.txt);
+
+        suggest_item_title1.setText("概况："+heWeather5Item.suggestion.comf.brf);
+        suggest_item_title2.setText("空气："+heWeather5Item.suggestion.air.brf);
+        suggest_item_title3.setText("穿衣："+heWeather5Item.suggestion.drsg.brf);
+        suggest_item_title4.setText("感冒："+heWeather5Item.suggestion.flu.brf);
+        suggest_item_title5.setText("旅游："+heWeather5Item.suggestion.trav.brf);
+        suggest_item_title6.setText("紫外线："+heWeather5Item.suggestion.uv.brf);
+        suggest_item_title7.setText("运动："+heWeather5Item.suggestion.sport.brf);
+        suggest_item_title8.setText("洗车："+heWeather5Item.suggestion.cw.brf);
+
+        suggest_item_text1.setText(heWeather5Item.suggestion.comf.txt);
+        suggest_item_text2.setText(heWeather5Item.suggestion.air.txt);
+        suggest_item_text3.setText(heWeather5Item.suggestion.drsg.txt);
+        suggest_item_text4.setText(heWeather5Item.suggestion.flu.txt);
+        suggest_item_text5.setText(heWeather5Item.suggestion.trav.txt);
+        suggest_item_text6.setText(heWeather5Item.suggestion.uv.txt);
+        suggest_item_text7.setText(heWeather5Item.suggestion.sport.txt);
+        suggest_item_text8.setText(heWeather5Item.suggestion.cw.txt);
 
         //同步完成后收回下拉菜单
         mPullRefreshScrollView.onRefreshComplete();

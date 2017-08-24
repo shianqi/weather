@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:background="#ffffff"
+              android:background="#dddddd"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
@@ -9,7 +9,7 @@
             android:id="@+id/pull_refresh_scrollview"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            ptr:ptrHeaderBackground="#eeeeee"
+            ptr:ptrHeaderBackground="#ffffff"
             ptr:ptrHeaderTextColor="#333333"
             ptr:ptrHeaderTextAppearance="@android:attr/textAppearanceMedium"
             ptr:ptrAnimationStyle="flip">
@@ -174,11 +174,176 @@
 
             <com.shianqi.app.weather.Components.NoScrollListView
                     android:id="@+id/NoScrollListview"
-                    android:divider="@null"
+                    android:background="#ffffff"
+                    android:divider="@drawable/shape_dividing_line"
                     android:listSelector="@android:color/transparent"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"/>
+            <LinearLayout
+                    style="@style/suggest_box">
+                <LinearLayout
+                        style="@style/suggest_title">
+                    <TextView
+                            style="@style/suggest_title_text"
+                            android:text="出行建议"/>
+                </LinearLayout>
+                <RelativeLayout
+                        style="@style/suggest_item">
+                    <ImageView
+                            android:id="@+id/suggest_item_icon1"
+                            style="@style/suggest_item_icon"
+                            android:src="@drawable/ic_launcher"/>
+                    <TextView
+                            android:id="@+id/suggest_item_title1"
+                            style="@style/suggest_item_title"
+                            android:layout_alignTop="@id/suggest_item_icon1"
+                            android:layout_toEndOf="@id/suggest_item_icon1"/>
+                    <TextView
+                            android:id="@+id/suggest_item_text1"
+                            style="@style/suggest_item_text"
+                            android:layout_below="@id/suggest_item_title1"
+                            android:layout_toEndOf="@id/suggest_item_icon1"/>
+                </RelativeLayout>
+                <RelativeLayout
+                        style="@style/suggest_item">
+                    <ImageView
+                            android:id="@+id/suggest_item_icon2"
+                            style="@style/suggest_item_icon"
+                            android:src="@drawable/ic_launcher"/>
+                    <TextView
+                            android:id="@+id/suggest_item_title2"
+                            style="@style/suggest_item_title"
+                            android:layout_alignTop="@id/suggest_item_icon2"
+                            android:layout_toEndOf="@id/suggest_item_icon2"/>
+                    <TextView
+                            android:id="@+id/suggest_item_text2"
+                            style="@style/suggest_item_text"
+                            android:layout_below="@id/suggest_item_title2"
+                            android:layout_toEndOf="@id/suggest_item_icon2"/>
+                </RelativeLayout>
+                <RelativeLayout
+                        style="@style/suggest_item">
+                    <ImageView
+                            android:id="@+id/suggest_item_icon3"
+                            style="@style/suggest_item_icon"
+                            android:src="@drawable/ic_launcher"/>
+                    <TextView
+                            android:id="@+id/suggest_item_title3"
+                            style="@style/suggest_item_title"
+                            android:layout_alignTop="@id/suggest_item_icon3"
+                            android:layout_toEndOf="@id/suggest_item_icon3"/>
+                    <TextView
+                            android:id="@+id/suggest_item_text3"
+                            style="@style/suggest_item_text"
+                            android:layout_below="@id/suggest_item_title3"
+                            android:layout_toEndOf="@id/suggest_item_icon3"/>
+                </RelativeLayout>
+                <RelativeLayout
+                        style="@style/suggest_item">
+                    <ImageView
+                            android:id="@+id/suggest_item_icon4"
+                            style="@style/suggest_item_icon"
+                            android:src="@drawable/ic_launcher"/>
+                    <TextView
+                            android:id="@+id/suggest_item_title4"
+                            style="@style/suggest_item_title"
+                            android:layout_alignTop="@id/suggest_item_icon4"
+                            android:layout_toEndOf="@id/suggest_item_icon4"/>
+                    <TextView
+                            android:id="@+id/suggest_item_text4"
+                            style="@style/suggest_item_text"
+                            android:layout_below="@id/suggest_item_title4"
+                            android:layout_toEndOf="@id/suggest_item_icon4"/>
+                </RelativeLayout>
+                <RelativeLayout
+                        style="@style/suggest_item">
+                    <ImageView
+                            android:id="@+id/suggest_item_icon5"
+                            style="@style/suggest_item_icon"
+                            android:src="@drawable/ic_launcher"/>
+                    <TextView
+                            android:id="@+id/suggest_item_title5"
+                            style="@style/suggest_item_title"
+                            android:layout_alignTop="@id/suggest_item_icon5"
+                            android:layout_toEndOf="@id/suggest_item_icon5"/>
+                    <TextView
+                            android:id="@+id/suggest_item_text5"
+                            style="@style/suggest_item_text"
+                            android:layout_below="@id/suggest_item_title5"
+                            android:layout_toEndOf="@id/suggest_item_icon5"/>
+                </RelativeLayout>
+                <RelativeLayout
+                        style="@style/suggest_item_last">
+                    <ImageView
+                            android:id="@+id/suggest_item_icon6"
+                            style="@style/suggest_item_icon"
+                            android:src="@drawable/ic_launcher"/>
+                    <TextView
+                            android:id="@+id/suggest_item_title6"
+                            style="@style/suggest_item_title"
+                            android:layout_alignTop="@id/suggest_item_icon6"
+                            android:layout_toEndOf="@id/suggest_item_icon6"/>
+                    <TextView
+                            android:id="@+id/suggest_item_text6"
+                            style="@style/suggest_item_text"
+                            android:layout_below="@id/suggest_item_title6"
+                            android:layout_toEndOf="@id/suggest_item_icon6"/>
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                    style="@style/suggest_box">
+                <LinearLayout
+                        style="@style/suggest_title">
+                    <TextView
+                            style="@style/suggest_title_text"
+                            android:text="运动建议"/>
+                </LinearLayout>
+                <RelativeLayout
+                        style="@style/suggest_item_last">
+                    <ImageView
+                            android:id="@+id/suggest_item_icon7"
+                            style="@style/suggest_item_icon"
+                            android:src="@drawable/ic_launcher"/>
+                    <TextView
+                            android:id="@+id/suggest_item_title7"
+                            style="@style/suggest_item_title"
+                            android:layout_alignTop="@id/suggest_item_icon7"
+                            android:layout_toEndOf="@id/suggest_item_icon7"/>
+                    <TextView
+                            android:id="@+id/suggest_item_text7"
+                            style="@style/suggest_item_text"
+                            android:layout_below="@id/suggest_item_title7"
+                            android:layout_toEndOf="@id/suggest_item_icon7"/>
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                    style="@style/suggest_box">
+                <LinearLayout
+                        style="@style/suggest_title">
+                    <TextView
+                            style="@style/suggest_title_text"
+                            android:text="驾车建议"/>
+                </LinearLayout>
+                <RelativeLayout
+                        style="@style/suggest_item_last">
+                    <ImageView
+                            android:id="@+id/suggest_item_icon8"
+                            style="@style/suggest_item_icon"
+                            android:src="@drawable/ic_launcher"/>
+                    <TextView
+                            android:id="@+id/suggest_item_title8"
+                            style="@style/suggest_item_title"
+                            android:layout_alignTop="@id/suggest_item_icon8"
+                            android:layout_toEndOf="@id/suggest_item_icon8"/>
+                    <TextView
+                            android:id="@+id/suggest_item_text8"
+                            style="@style/suggest_item_text"
+                            android:layout_below="@id/suggest_item_title8"
+                            android:layout_toEndOf="@id/suggest_item_icon8"/>
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
+
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
 </LinearLayout>
