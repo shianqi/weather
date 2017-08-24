@@ -96,8 +96,7 @@ public class AddCityListViewAdapter extends BaseAdapter {
                     entity.setGd_province(tip.province);
                     entity.setGd_city(tip.getCity());
                     entity.setGd_district(tip.getDistrict());
-                    entity.setIsLocation(LocationWeatherEntity.NOT_LOCATION);
-                    entity.setIsLocation(tip.location);
+                    entity.setLocation(tip.location);
                     entity.setHf_weather(weatherInfoString);
                     sqlLiteService.saveOrUpdateLocationInfo(entity);
 

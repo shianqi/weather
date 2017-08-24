@@ -1,11 +1,11 @@
 package com.shianqi.app.weather.Entity;
 
+import android.util.Log;
+
 /**
  * Created by admin on 2017/8/22.
  */
 public class LocationWeatherEntity {
-    public static final String IS_LOCATION = "1001";
-    public static final String NOT_LOCATION = "1000";
 
     //格式化的地点名
     private String formatted_address;
@@ -19,8 +19,6 @@ public class LocationWeatherEntity {
     private String location;
     //和风天气API JSON
     private String hf_weather;
-    //是否是当前定位城市
-    private String isLocation;
 
     //天气更新时间
     private String updateTime;
@@ -42,7 +40,11 @@ public class LocationWeatherEntity {
     }
 
     public String getGd_city() {
-        return gd_city;
+        if(gd_city != null && !gd_city.equals("[]") && !gd_city.equals("") ){
+            return gd_city;
+        }else{
+            return getGd_province();
+        }
     }
 
     public void setGd_city(String gd_city) {
@@ -65,6 +67,34 @@ public class LocationWeatherEntity {
         }
     }
 
+    public String getOtherLocation() {
+        boolean state = true;
+        String res = "";
+        if(gd_district != null && !gd_district.equals("[]") && !gd_district.equals("") ){
+            Log.e("gd_district", gd_district);
+            if(state){
+                state = false;
+            }else{
+                res += gd_district;
+            }
+        }
+        if(gd_city != null && !gd_city.equals("[]") && !gd_city.equals("") ){
+            if(state){
+                state = false;
+            }else{
+                res += gd_city + "，";
+            }
+        }
+        if(gd_province != null && !gd_province.equals("[]") && !gd_province.equals("") ){
+            if(state){
+                state = false;
+            }else{
+                res += gd_province;
+            }
+        }
+        return res;
+    }
+
     public void setGd_district(String gd_district) {
         this.gd_district = gd_district;
     }
@@ -75,14 +105,6 @@ public class LocationWeatherEntity {
 
     public void setHf_weather(String hf_weather) {
         this.hf_weather = hf_weather;
-    }
-
-    public String getIsLocation() {
-        return isLocation;
-    }
-
-    public void setIsLocation(String isLocation) {
-        this.isLocation = isLocation;
     }
 
     public String getUpdateTime() {

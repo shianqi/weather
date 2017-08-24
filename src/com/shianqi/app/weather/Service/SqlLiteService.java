@@ -31,7 +31,6 @@ public class SqlLiteService extends SQLiteOpenHelper {
                 "gd_district varchar(20)," +
                 "location varchar(100)," +
                 "hf_weather varchar(3000)," +
-                "isLocation varchar(10)," +
                 "updateTime varchar(20))"
         );
     }
@@ -53,7 +52,6 @@ public class SqlLiteService extends SQLiteOpenHelper {
         cv.put("gd_district", entity.getGd_district().toString().equals("[]")?"":entity.getGd_district().toString());
         cv.put("location", entity.getLocation());
         cv.put("hf_weather", entity.getHf_weather());
-        cv.put("isLocation", entity.getIsLocation());
         cv.put("updateTime", System.currentTimeMillis()+"");
 
         String sql = "SELECT * FROM LocationInfo WHERE formatted_address = ?;" ;
@@ -80,10 +78,27 @@ public class SqlLiteService extends SQLiteOpenHelper {
             entity.setGd_district(cursor.getString(cursor.getColumnIndex("gd_district")));
             entity.setLocation(cursor.getString(cursor.getColumnIndex("location")));
             entity.setHf_weather(cursor.getString(cursor.getColumnIndex("hf_weather")));
-            entity.setIsLocation(cursor.getString(cursor.getColumnIndex("isLocation")));
             entity.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
             list.add(entity);
         }
         return list;
+    }
+
+    public LocationWeatherEntity getLocationInfoByFormatted(String formatted_address) {
+        SQLiteDatabase db = getReadableDatabase();
+        String sql = "SELECT * FROM LocationInfo WHERE formatted_address = ?;" ;
+        Cursor cursor = db.rawQuery(sql,new String[]{formatted_address});
+        if(cursor.moveToNext()){
+            LocationWeatherEntity entity = new LocationWeatherEntity();
+            entity.setFormatted_address(cursor.getString(cursor.getColumnIndex("formatted_address")));
+            entity.setGd_province(cursor.getString(cursor.getColumnIndex("gd_province")));
+            entity.setGd_city(cursor.getString(cursor.getColumnIndex("gd_city")));
+            entity.setGd_district(cursor.getString(cursor.getColumnIndex("gd_district")));
+            entity.setLocation(cursor.getString(cursor.getColumnIndex("location")));
+            entity.setHf_weather(cursor.getString(cursor.getColumnIndex("hf_weather")));
+            entity.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
+            return entity;
+        }
+        return null;
     }
 }

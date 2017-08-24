@@ -9,16 +9,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
+import android.widget.*;
 import com.shianqi.app.weather.Components.CityManagerListViewAdapter;
 import com.shianqi.app.weather.Entity.LocationWeatherEntity;
 import com.shianqi.app.weather.R;
 import com.shianqi.app.weather.Service.SqlLiteService;
 import com.shianqi.app.weather.Service.WeatherService;
 import com.shianqi.app.weather.Utils.ToastManager;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +27,8 @@ import java.util.List;
  * Created by admin on 2017/8/19.
  */
 public class CityManageActivity extends Activity {
-    private TextView back;
+    private LinearLayout back;
+    private TextView backTextView;
     private Button add_city_button;
     private ListView listView;
     private CityManagerListViewAdapter adapter;
@@ -44,10 +43,11 @@ public class CityManageActivity extends Activity {
 
         sqlLiteService = new SqlLiteService(CityManageActivity.this);
 
-        back = (TextView)findViewById(R.id.city_manage_back);
+        back = (LinearLayout)findViewById(R.id.city_manage_back);
+        backTextView = (TextView)findViewById(R.id.city_manage_back_text);
         add_city_button = (Button)findViewById(R.id.city_manage_add_city_button);
 
-        back.setTypeface(iconfont);
+        backTextView.setTypeface(iconfont);
         add_city_button.setTypeface(iconfont);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +70,7 @@ public class CityManageActivity extends Activity {
         adapter = new CityManagerListViewAdapter(CityManageActivity.this, listItem, new CityManagerListViewAdapter.Callback() {
             @Override
             public void close() {
-
+                exit();
             }
         });
         listView.setAdapter(adapter);
@@ -109,9 +109,13 @@ public class CityManageActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            CityManageActivity.this.finish();
-            overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top);
+            exit();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void exit() {
+        CityManageActivity.this.finish();
+        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top);
     }
 }

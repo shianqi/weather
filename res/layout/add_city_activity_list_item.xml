@@ -2,13 +2,12 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp">
+        android:layout_height="wrap_content">
     <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_city_manage_activity_list_item"
+            android:background="@drawable/shape_add_city_activity_list_item"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:paddingStart="20dp"
@@ -16,7 +15,8 @@
         <TextView
                 android:id="@+id/add_city_list_item_location"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textColor="#333333"/>
         <TextView
                 android:id="@+id/add_city_list_item_have_add"
                 android:layout_alignParentEnd="true"

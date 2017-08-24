@@ -19,31 +19,33 @@
                 android:background="#ffffff">
             <EditText
                     android:id="@+id/add_city_input"
+                    android:layout_height="36dp"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingStart="40dp"
-                    android:paddingEnd="40dp"/>
+                    android:gravity="center_vertical"
+                    android:textSize="15sp"
+                    android:paddingStart="42dp"
+                    android:hint="@string/add_city_input_hint"
+                    android:paddingEnd="42dp"/>
             <TextView
                     android:id="@+id/add_city_back"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:layout_width="40dp"
+                    android:gravity="center"
+                    android:layout_height="36dp"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20sp"
                     android:layout_alignParentStart="true"
-                    android:text="@string/city_manage_back"/>
+                    android:text="@string/add_city_back"/>
             <TextView
                     android:id="@+id/add_city_clean"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:layout_height="36dp"
+                    android:gravity="center"
+                    android:layout_width="40dp"
                     android:layout_alignParentEnd="true"
-                    android:textColor="#000000"
-                    android:text="@string/city_manage_back"/>
+                    android:textSize="20sp"
+                    android:textColor="#333333"
+                    android:text="@string/add_city_clean"/>
         </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
@@ -57,6 +59,7 @@
         <TextView
                 android:id="@+id/add_city_tips"
                 android:textColor="#666666"
+                android:gravity="center_horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"/>
     </RelativeLayout>
@@ -66,6 +69,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/add_city_title"
+            android:divider="@android:color/transparent"
             android:background="#F7F7F7">
     </ListView>
 </RelativeLayout>

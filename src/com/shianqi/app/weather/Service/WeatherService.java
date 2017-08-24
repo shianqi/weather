@@ -3,8 +3,10 @@ package com.shianqi.app.weather.Service;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.shianqi.app.weather.Entity.LocationWeatherEntity;
 import com.shianqi.app.weather.Utils.SharedPreferencesManager;
 import okhttp3.*;
 
@@ -123,6 +125,28 @@ public class WeatherService {
         public String getAqiCityAqi() {
             if(aqi!=null && aqi.city!=null && aqi.city.aqi!=null){
                 return aqi.city.aqi;
+            }else{
+                return "-";
+            }
+        }
+
+        public String getNowWindSc() {
+            if(now!=null && now.wind!=null && now.wind.sc!=null){
+                if(now.wind.sc.equals("无风")){
+                    return "0";
+                }else if(now.wind.sc.equals("软风")){
+                    return "1";
+                }else if(now.wind.sc.equals("轻风")){
+                    return "2";
+                }else if(now.wind.sc.equals("微风")){
+                    return "2-3";
+                }else if(now.wind.sc.equals("和风")){
+                    return "4-6";
+                }else if(now.wind.sc.equals("轻劲风")){
+                    return "7-8";
+                }else{
+                    return now.wind.sc;
+                }
             }else{
                 return "-";
             }
@@ -275,7 +299,6 @@ public class WeatherService {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         final String body = response.body().string();
-                        cacheWeatherInfo(context, body);
                         Handler handler = new Handler(Looper.getMainLooper());
                         handler.post(new Runnable() {
                             @Override
@@ -302,24 +325,37 @@ public class WeatherService {
 
     /**
      * 将天气信息写入缓存
-     * @param weatherInfoStr 天气信息（json字符串）
+     * @param weatherInfoId 天气信息ID
      */
-    public static void cacheWeatherInfo(Context context, String weatherInfoStr){
+    public static void cacheWeatherInfoId(Context context, String weatherInfoId){
+        Log.e("cacheWeatherInfoId!!!!", weatherInfoId);
         if(manager == null){
             manager = new SharedPreferencesManager(context);
         }
-        manager.writeString("weather", weatherInfoStr);
+        manager.writeString("weather", weatherInfoId);
     }
+
+    public static String getCacheWeatherILnfoId(Context context) {
+        if(manager == null){
+            manager = new SharedPreferencesManager(context);
+        }
+        return manager.readString("weather");
+    }
+
 
     /**
      * 从缓存中提取天气信息
      * @return 天气信息
      */
     public static WeatherInfo getCacheWeatherInfo(Context context){
-        if(manager == null){
-            manager = new SharedPreferencesManager(context);
+        String weatherInfoId = getCacheWeatherILnfoId(context);
+
+        if(weatherInfoId!=null){
+            Log.e("weatherInfoId", weatherInfoId);
+            SqlLiteService sqlLiteService = new SqlLiteService(context);
+            LocationWeatherEntity entity = sqlLiteService.getLocationInfoByFormatted(weatherInfoId);
+            return analysisWeatherInfo(entity.getHf_weather());
         }
-        String weatherInfoStr = manager.readString("weather");
-        return analysisWeatherInfo(weatherInfoStr);
+        return null;
     }
 }

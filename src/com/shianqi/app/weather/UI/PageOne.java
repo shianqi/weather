@@ -2,6 +2,7 @@ package com.shianqi.app.weather.UI;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,9 +24,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import com.shianqi.app.weather.Components.NoScrollListView;
+import com.shianqi.app.weather.Entity.LocationWeatherEntity;
 import com.shianqi.app.weather.MainActivity;
+import com.shianqi.app.weather.Service.InputTipsService;
 import com.shianqi.app.weather.Service.PositionService;
+import com.shianqi.app.weather.Service.SqlLiteService;
 import com.shianqi.app.weather.Service.WeatherService;
+import com.shianqi.app.weather.Utils.SharedPreferencesManager;
 import com.shianqi.app.weather.Utils.ToastManager;
 import com.shianqi.app.weather.R;
 
@@ -71,11 +76,12 @@ public class PageOne extends Fragment {
         initListView();
         setListener();
         getWeatherInfoByCache();
-        getWeatherByLocationInfo();
         return view;
     }
 
     private void findView(View view) {
+        Typeface numberTypeface = Typeface.createFromAsset(getActivity().getAssets(), "iconfont/number.ttf");
+
         listView = (NoScrollListView)view.findViewById(R.id.NoScrollListview);
         tmpTextView = (TextView)view.findViewById(R.id.weather_tmp);
         dirTextView = (TextView)view.findViewById(R.id.weather_dir);
@@ -88,6 +94,8 @@ public class PageOne extends Fragment {
         webview = (WebView)view. findViewById(R.id.weather_webview);
         add_position = (Button)view.findViewById(R.id.add_position);
         mPullRefreshScrollView = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
+
+        tmpTextView.setTypeface(numberTypeface);
     }
 
     private void initListView() {
@@ -148,7 +156,12 @@ public class PageOne extends Fragment {
         @Override
         protected String[] doInBackground(Void... params) {
             // Simulates a background job.
-            getWeatherInfo();
+            String id = WeatherService.getCacheWeatherILnfoId(getActivity());
+            if(id!=null && !id.equals("")){
+                SqlLiteService sqlLiteService = new SqlLiteService(getActivity());
+                LocationWeatherEntity  entity = sqlLiteService.getLocationInfoByFormatted(id);
+                getWeatherInfo(entity.getGd_city());
+            }
             return null;
         }
 
@@ -166,7 +179,7 @@ public class PageOne extends Fragment {
             public void onLocationChanged(AMapLocation aMapLocation) {
                 if (aMapLocation != null) {
                     if (aMapLocation.getErrorCode() == 0) {
-                        getWeatherInfo();
+                        getWeatherInfo(aMapLocation.getCity());
                     }
                 }
             }
@@ -177,14 +190,16 @@ public class PageOne extends Fragment {
         WeatherService.WeatherInfo weatherInfo = WeatherService.getCacheWeatherInfo(getActivity());
         if(weatherInfo!=null){
             syncWeatherInfo(weatherInfo);
+        }else{
+            getWeatherByLocationInfo();
         }
     }
 
     /**
      * 获取温度信息
      */
-    public void getWeatherInfo(){
-        WeatherService.getWeatherInfo(getActivity(), "shenyang", new WeatherService.WeatherCallback() {
+    public void getWeatherInfo(final String city){
+        WeatherService.getWeatherInfo(getActivity(), city, new WeatherService.WeatherCallback() {
             @Override
             public void reject(Exception e) {
                 ToastManager.toast(getActivity(), "信息获取失败，请稍后尝试");
@@ -193,8 +208,36 @@ public class PageOne extends Fragment {
             }
 
             @Override
-            public void resolve(String weatherInfoString) {
-                syncWeatherInfo(WeatherService.analysisWeatherInfo(weatherInfoString));
+            public void resolve(final String weatherInfoString) {
+                final WeatherService.WeatherInfo weatherInfo = WeatherService.analysisWeatherInfo(weatherInfoString);
+                syncWeatherInfo(weatherInfo);
+                final SqlLiteService sqlLiteService = new SqlLiteService(getActivity());
+                LocationWeatherEntity entity = new LocationWeatherEntity();
+
+                InputTipsService.getInputTipsInfo(getActivity(), weatherInfo.HeWeather5.get(0).basic.city, new InputTipsService.InputTipsCallback() {
+                    @Override
+                    public void reject(Exception e) {
+
+                    }
+
+                    @Override
+                    public void resolve(InputTipsService.InputTipsInfo inputTipsInfo) {
+                        InputTipsService.Tips tip = inputTipsInfo.geocodes.get(0);
+                        if(weatherInfo.HeWeather5.get(0).status.equals("ok")){
+                            LocationWeatherEntity entity = new LocationWeatherEntity();
+                            entity.setFormatted_address(tip.formatted_address);
+                            entity.setGd_province(tip.province);
+                            entity.setGd_city(tip.getCity());
+                            entity.setGd_district(tip.getDistrict());
+                            entity.setLocation(tip.location);
+                            entity.setHf_weather(weatherInfoString);
+                            sqlLiteService.saveOrUpdateLocationInfo(entity);
+                            WeatherService.cacheWeatherInfoId(getActivity(),tip.formatted_address);
+                        }else{
+                            ToastManager.toast(getActivity(), "暂无此城市天气数据");
+                        }
+                    }
+                });
             }
         });
     }
@@ -223,7 +266,7 @@ public class PageOne extends Fragment {
 
         tmpTextView.setText(heWeather5Item.now.tmp + "°");
         dirTextView.setText(heWeather5Item.now.wind.dir);
-        scTextView.setText(heWeather5Item.now.wind.sc + "级");
+        scTextView.setText(heWeather5Item.getNowWindSc() + "级");
         humTextView.setText(heWeather5Item.now.hum + "%");
         weather_qlty.setText(heWeather5Item.getAqiCityQlty());
         weather_aqi.setText(heWeather5Item.getAqiCityAqi());
@@ -236,6 +279,25 @@ public class PageOne extends Fragment {
 
     @Override
     public void onStart() {
+        String id = WeatherService.getCacheWeatherILnfoId(getActivity());
+        if(id!=null && !id.equals("")){
+            SqlLiteService sqlLiteService = new SqlLiteService(getActivity());
+            LocationWeatherEntity  entity = sqlLiteService.getLocationInfoByFormatted(id);
+            getWeatherInfo(entity.getGd_city());
+        }
         super.onStart();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (webview != null) {
+            webview.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            webview.clearHistory();
+
+            ((ViewGroup) webview.getParent()).removeView(webview);
+            webview.destroy();
+            webview = null;
+        }
+        super.onDestroy();
     }
 }

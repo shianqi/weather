@@ -1,6 +1,7 @@
 package com.shianqi.app.weather.Components;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,11 +54,12 @@ public class CityManagerListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         CityManagerListViewHolder holder;
         if(view==null){
             holder = new CityManagerListViewHolder();
             view = inflater.inflate(R.layout.city_manage_activity_list_item, null);
+            Typeface numberTypeface = Typeface.createFromAsset(context.getAssets(), "iconfont/number.ttf");
 
             holder.street = (TextView)view.findViewById(R.id.city_manage_item_street);
             holder.location = (TextView)view.findViewById(R.id.city_manage_item_location);
@@ -66,10 +68,13 @@ public class CityManagerListViewAdapter extends BaseAdapter {
             holder.weather = (TextView)view.findViewById(R.id.city_manage_item_weather);
             holder.temperature_range = (TextView)view.findViewById(R.id.city_manage_item_temperature_range);
 
+            holder.temperature.setTypeface(numberTypeface);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ToastManager.toast(context, "");
+                    WeatherService.cacheWeatherInfoId(context, list.get(i).getFormatted_address());
+                    callback.close();
                 }
             });
 
@@ -81,13 +86,13 @@ public class CityManagerListViewAdapter extends BaseAdapter {
         WeatherService.HeWeather5Item heWeather5Item  = weatherInfo.HeWeather5.get(0);
 
         holder.street.setText(list.get(i).getGd_district());
-        holder.location.setText(list.get(i).getLocation());
-        holder.temperature.setText(heWeather5Item.now.tmp);
+        holder.location.setText(list.get(i).getOtherLocation());
+        holder.temperature.setText(heWeather5Item.now.tmp + "°");
         holder.temperature_icon.setText(heWeather5Item.now.cond.txt);
         holder.weather.setText("空气"+heWeather5Item.getAqiCityQlty()+
                 " | 湿度"+heWeather5Item.now.hum+ "%" +
                 " | "+heWeather5Item.now.wind.dir+
-                heWeather5Item.now.wind.sc+"级");
+                heWeather5Item.getNowWindSc()+"级");
         holder.temperature_range.setText(
                 heWeather5Item.daily_forecast.get(0).tmp.max+"°/" +
                 heWeather5Item.daily_forecast.get(0).tmp.min+"°");

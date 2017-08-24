@@ -3,20 +3,23 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp">
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp">
     <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/shape_city_manage_activity_list_item"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
         <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp">
             <TextView
@@ -25,36 +28,41 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:text="hl"/>
+                    android:textSize="21sp"
+                    android:textColor="#555"/>
             <TextView
                     android:id="@+id/city_manage_item_location_icon"
                     android:layout_toEndOf="@id/city_manage_item_street"
                     android:layout_alignParentTop="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="hl"/>
+                    android:textColor="#666"
+                    android:text=""/>
             <TextView
                     android:id="@+id/city_manage_item_location"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/city_manage_item_street"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="hl"/>
+                    android:textColor="#666"
+                    android:text=""/>
             <TextView
                     android:id="@+id/city_manage_item_temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:textSize="34sp"
-                    android:text="hl"/>
+                    android:textColor="#666"
+                    android:textSize="44sp"
+                    android:text=""/>
             <TextView
                     android:id="@+id/city_manage_item_temperature_icon"
                     android:layout_toStartOf="@id/city_manage_item_temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:text="hl"/>
+                    android:textColor="#666"
+                    android:text=""/>
         </RelativeLayout>
         <LinearLayout
                 android:layout_width="fill_parent"
@@ -74,14 +82,16 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
-                    android:text="hl"/>
+                    android:textColor="#666"
+                    android:text=""/>
             <TextView
                     android:id="@+id/city_manage_item_temperature_range"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:text="hl"/>
+                    android:textColor="#666"
+                    android:text=""/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
