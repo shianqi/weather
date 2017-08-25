@@ -1,6 +1,8 @@
 package com.shianqi.app.weather.Components;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +77,13 @@ public class CityManagerListViewAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     WeatherService.cacheWeatherInfoId(context, list.get(i).getFormatted_address());
                     callback.close();
+                }
+            });
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return false;
                 }
             });
 

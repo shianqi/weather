@@ -21,6 +21,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
+import com.shianqi.app.weather.Components.FutureWeatherListViewAdapter;
 import com.shianqi.app.weather.Components.NoScrollListView;
 import com.shianqi.app.weather.Entity.LocationWeatherEntity;
 import com.shianqi.app.weather.Service.InputTipsService;
@@ -38,8 +39,8 @@ import java.util.List;
 public class PageOne extends Fragment {
     private View view;
     private NoScrollListView listView;
-    private ArrayList<HashMap<String,Object>> listItem;
-    private SimpleAdapter listAdapter;
+    private List<WeatherService.DailyForecastItem> listItem;
+    private FutureWeatherListViewAdapter listAdapter;
     private PullToRefreshScrollView mPullRefreshScrollView;
     //温度
     private TextView tmpTextView;
@@ -95,6 +96,7 @@ public class PageOne extends Fragment {
 
     private void findView(View view) {
         Typeface numberTypeface = Typeface.createFromAsset(getActivity().getAssets(), "iconfont/number.ttf");
+        Typeface iconfont = Typeface.createFromAsset(getActivity().getAssets(), "iconfont/iconfont.ttf");
 
         listView = (NoScrollListView)view.findViewById(R.id.NoScrollListview);
         tmpTextView = (TextView)view.findViewById(R.id.weather_tmp);
@@ -128,26 +130,14 @@ public class PageOne extends Fragment {
 
         mPullRefreshScrollView = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
 
+        add_position.setTypeface(iconfont);
         tmpTextView.setTypeface(numberTypeface);
     }
 
     private void initListView() {
         listView.setFocusable(false);
-        listItem = new ArrayList<HashMap<String, Object>>();
-        listAdapter = new SimpleAdapter(getActivity(),listItem,
-                R.layout.future_weather_list_item,
-                new String[]{
-                        "future_weather_day",
-                        "future_weather_icon",
-                        "future_weather_info",
-                        "future_weather_range"
-                },
-                new int[]{
-                        R.id.future_weather_day,
-                        R.id.future_weather_icon,
-                        R.id.future_weather_info,
-                        R.id.future_weather_range
-                });
+        listItem = new ArrayList<WeatherService.DailyForecastItem>();
+        listAdapter = new FutureWeatherListViewAdapter(getActivity(), listItem);
         listView.setAdapter(listAdapter);
     }
 
@@ -285,16 +275,9 @@ public class PageOne extends Fragment {
 
         Iterator<WeatherService.DailyForecastItem> iterator =  heWeather5Item.daily_forecast.iterator();
         listItem.clear();
-        String[] day = {"今天","明天","后天"};
-        int dayIndex = 0;
         while (iterator.hasNext()){
             WeatherService.DailyForecastItem item = iterator.next();
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("future_weather_day", day[dayIndex++]);
-            map.put("future_weather_icon", item.cond.txt_d);
-            map.put("future_weather_info", item.cond.txt_d + " | " + item.wind.sc);
-            map.put("future_weather_range", item.tmp.min + "° /" + item.tmp.max+"°");
-            listItem.add(map);
+            listItem.add(item);
         }
         listAdapter.notifyDataSetChanged();
 
@@ -307,6 +290,60 @@ public class PageOne extends Fragment {
         weather_aqi.setText(heWeather5Item.getAqiCityAqi());
         weather_city.setText(heWeather5Item.basic.city + " | ");
         weather_txt_d.setText(heWeather5Item.now.cond.txt);
+
+        String str = heWeather5Item.now.cond.txt;
+
+        if(
+                str.equals("小雪")||
+                str.equals("中雪")||
+                str.equals("大雪")||
+                str.equals("暴雪")||
+                str.equals("阵雪")
+                ){
+            webview.loadUrl("javascript:changeWeather(0)");
+        }else if(
+                str.equals("阵雨")||
+                        str.equals("强阵雨")||
+                        str.equals("雷阵雨")||
+                        str.equals("强雷阵雨")||
+                        str.equals("雷阵雨伴有冰雹")||
+                        str.equals("小雨")||
+                        str.equals("毛毛雨")||
+                        str.equals("细雨")||
+                        str.equals("中雨")||
+                        str.equals("大雨")||
+                        str.equals("暴雨")||
+                        str.equals("大暴雨")||
+                        str.equals("特大暴雨")
+                ){
+            webview.loadUrl("javascript:changeWeather(1)");
+        }else if(
+                str.equals("薄雾")||
+                str.equals("雾")||
+                str.equals("霾")
+                ){
+            webview.loadUrl("javascript:changeWeather(2)");
+        }else if(
+                str.equals("多云")||
+                str.equals("晴间多云")||
+                str.equals("阴")||
+                str.equals("多云")||
+                str.equals("多云")
+                ){
+            webview.loadUrl("javascript:changeWeather(3)");
+        }else if(str.equals("沙尘暴")){
+            webview.loadUrl("javascript:changeWeather(4)");
+        }else if(str.equals("晴")){
+            webview.loadUrl("javascript:changeWeather(5)");
+        }else if(
+                str.equals("冻雨")||
+                str.equals("雨夹雪")||
+                str.equals("阵雨夹雪")||
+                str.equals("雨雪天气")
+                ){
+            webview.loadUrl("javascript:changeWeather(6)");
+        }
+
 
         suggest_item_title1.setText("概况："+heWeather5Item.suggestion.comf.brf);
         suggest_item_title2.setText("空气："+heWeather5Item.suggestion.air.brf);

@@ -14,10 +14,10 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:background="@android:color/transparent"
-                android:paddingBottom="18dp"
-                android:paddingTop="18dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="10dp"
+                android:paddingBottom="12dp"
+                android:paddingTop="15dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <TextView

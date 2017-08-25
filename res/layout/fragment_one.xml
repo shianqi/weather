@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:background="#dddddd"
+              android:background="#eeeeee"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
@@ -34,17 +34,17 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginTop="20sp"
+                        android:layout_marginTop="30sp"
                         android:layout_marginEnd="20sp"
                         android:background="@android:color/transparent"
                         android:textColor="#ffffff"
-                        android:textSize="42sp"
+                        android:textSize="24sp"
                         android:padding="10dp"
                         android:shadowColor="#aaaaaa"
                         android:shadowDx="0"
                         android:shadowDy="0"
                         android:shadowRadius="10"
-                        android:text="+"/>
+                        android:text="@string/city_manage_add_city_button"/>
 
                 <RelativeLayout android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
@@ -192,7 +192,7 @@
                     <ImageView
                             android:id="@+id/suggest_item_icon1"
                             style="@style/suggest_item_icon"
-                            android:src="@drawable/ic_launcher"/>
+                            android:src="@drawable/suggest_icon1"/>
                     <TextView
                             android:id="@+id/suggest_item_title1"
                             style="@style/suggest_item_title"
@@ -209,7 +209,7 @@
                     <ImageView
                             android:id="@+id/suggest_item_icon2"
                             style="@style/suggest_item_icon"
-                            android:src="@drawable/ic_launcher"/>
+                            android:src="@drawable/suggest_icon2"/>
                     <TextView
                             android:id="@+id/suggest_item_title2"
                             style="@style/suggest_item_title"
@@ -226,7 +226,7 @@
                     <ImageView
                             android:id="@+id/suggest_item_icon3"
                             style="@style/suggest_item_icon"
-                            android:src="@drawable/ic_launcher"/>
+                            android:src="@drawable/suggest_icon3"/>
                     <TextView
                             android:id="@+id/suggest_item_title3"
                             style="@style/suggest_item_title"
@@ -243,7 +243,7 @@
                     <ImageView
                             android:id="@+id/suggest_item_icon4"
                             style="@style/suggest_item_icon"
-                            android:src="@drawable/ic_launcher"/>
+                            android:src="@drawable/suggest_icon4"/>
                     <TextView
                             android:id="@+id/suggest_item_title4"
                             style="@style/suggest_item_title"
@@ -260,7 +260,7 @@
                     <ImageView
                             android:id="@+id/suggest_item_icon5"
                             style="@style/suggest_item_icon"
-                            android:src="@drawable/ic_launcher"/>
+                            android:src="@drawable/suggest_icon5"/>
                     <TextView
                             android:id="@+id/suggest_item_title5"
                             style="@style/suggest_item_title"
@@ -277,7 +277,7 @@
                     <ImageView
                             android:id="@+id/suggest_item_icon6"
                             style="@style/suggest_item_icon"
-                            android:src="@drawable/ic_launcher"/>
+                            android:src="@drawable/suggest_icon6"/>
                     <TextView
                             android:id="@+id/suggest_item_title6"
                             style="@style/suggest_item_title"
@@ -303,7 +303,7 @@
                     <ImageView
                             android:id="@+id/suggest_item_icon7"
                             style="@style/suggest_item_icon"
-                            android:src="@drawable/ic_launcher"/>
+                            android:src="@drawable/suggest_icon7"/>
                     <TextView
                             android:id="@+id/suggest_item_title7"
                             style="@style/suggest_item_title"
@@ -329,7 +329,7 @@
                     <ImageView
                             android:id="@+id/suggest_item_icon8"
                             style="@style/suggest_item_icon"
-                            android:src="@drawable/ic_launcher"/>
+                            android:src="@drawable/suggest_icon8"/>
                     <TextView
                             android:id="@+id/suggest_item_title8"
                             style="@style/suggest_item_title"
