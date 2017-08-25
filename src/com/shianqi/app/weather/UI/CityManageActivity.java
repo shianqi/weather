@@ -18,9 +18,7 @@ import com.shianqi.app.weather.Service.WeatherService;
 import com.shianqi.app.weather.Utils.ToastManager;
 import org.w3c.dom.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * 城市管理界面
@@ -34,6 +32,8 @@ public class CityManageActivity extends Activity {
     private CityManagerListViewAdapter adapter;
     private List listItem;
     private SqlLiteService sqlLiteService;
+    private TextView city_manage_delete;
+    private Set<Integer> removeSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,7 @@ public class CityManageActivity extends Activity {
         back = (LinearLayout)findViewById(R.id.city_manage_back);
         backTextView = (TextView)findViewById(R.id.city_manage_back_text);
         add_city_button = (Button)findViewById(R.id.city_manage_add_city_button);
+        city_manage_delete = (TextView)findViewById(R.id.city_manage_delete);
 
         backTextView.setTypeface(iconfont);
         add_city_button.setTypeface(iconfont);
@@ -65,14 +66,59 @@ public class CityManageActivity extends Activity {
                 CityManageActivity.this.overridePendingTransition(R.anim.slide_in_from_top, R.anim.slide_out_to_bottom);
             }
         });
-        listItem = new ArrayList();
-        listView = (ListView)findViewById(R.id.city_manage_listView);
-        adapter = new CityManagerListViewAdapter(CityManageActivity.this, listItem, new CityManagerListViewAdapter.Callback() {
+
+        removeSet = new HashSet<Integer>();
+
+        city_manage_delete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void close() {
-                exit();
+            public void onClick(View view) {
+                if(adapter.isEditable()){
+                    Iterator<Integer> iterator = removeSet.iterator();
+                    List<LocationWeatherEntity> list = new ArrayList<LocationWeatherEntity>();
+                    while(iterator.hasNext()){
+                        int i = iterator.next();
+                        LocationWeatherEntity entity = (LocationWeatherEntity) listItem.get(i);
+                        Log.e("REMOVE", entity.getFormatted_address());
+                        list.add(entity);
+                        sqlLiteService.removeLocationInfo(entity.getFormatted_address());
+                    }
+                    listItem.removeAll(list);
+                    city_manage_delete.setText("编辑");
+                    city_manage_delete.setBackgroundResource(R.drawable.shape_border_button);
+                    adapter.setEditable(false);
+                    removeSet.clear();
+                    adapter.notifyDataSetChanged();
+                }else{
+                    city_manage_delete.setText("删除");
+                    city_manage_delete.setBackgroundResource(R.drawable.shape_border_button_red);
+                    adapter.setEditable(true);
+                    removeSet.clear();
+                }
             }
         });
+
+        listItem = new ArrayList();
+        listView = (ListView)findViewById(R.id.city_manage_listView);
+        adapter = new CityManagerListViewAdapter(
+                CityManageActivity.this,
+                listItem,
+                new CityManagerListViewAdapter.Callback() {
+                    @Override
+                    public void close() {
+                        exit();
+                    }
+
+                    @Override
+                    public void addIndex(int index) {
+                        removeSet.add(index);
+                    }
+
+                    @Override
+                    public void removeIndex(int index) {
+                        removeSet.remove(index);
+                    }
+                });
+
         listView.setAdapter(adapter);
 
         getDate();

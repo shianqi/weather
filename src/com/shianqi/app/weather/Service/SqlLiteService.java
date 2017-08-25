@@ -40,6 +40,15 @@ public class SqlLiteService extends SQLiteOpenHelper {
 
     }
 
+    public void removeLocationInfo(String getFormatted_address){
+        if (getFormatted_address==null || getFormatted_address.equals("")){
+            return;
+        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "DELETE FROM LocationInfo WHERE formatted_address = ?;" ;
+        db.execSQL(sql,new String[]{ getFormatted_address });
+    }
+
     public void saveOrUpdateLocationInfo(LocationWeatherEntity entity){
         if(entity==null){
             return;
@@ -62,7 +71,6 @@ public class SqlLiteService extends SQLiteOpenHelper {
         }else {
             db.update("LocationInfo",cv,"formatted_address = ?",new String[]{entity.getFormatted_address()});
         }
-        db.close();
     }
 
     public List getAllLocationInfo() {

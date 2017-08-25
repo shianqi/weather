@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.shianqi.app.weather.Entity.CityManagerListViewHolder;
 import com.shianqi.app.weather.Entity.LocationWeatherEntity;
@@ -16,29 +18,48 @@ import com.shianqi.app.weather.Service.SqlLiteService;
 import com.shianqi.app.weather.Service.WeatherService;
 import com.shianqi.app.weather.Utils.ToastManager;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by admin on 2017/8/23.
  */
 public class CityManagerListViewAdapter extends BaseAdapter {
+    public final static boolean EDITABLE = true;
+    public final static boolean UNEDITABLE = false;
+
+    private boolean editable;
     private Context context;
+    private Set<Integer> removeSet;
     private LayoutInflater inflater = null;
     private SqlLiteService sqlLiteService;
     private Callback callback;
     private List<LocationWeatherEntity> list;
 
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
     public CityManagerListViewAdapter(Context context, List<LocationWeatherEntity> list, Callback callback) {
         this.callback = callback;
         this.list = list;
+        this.removeSet = new HashSet<Integer>();
         this.context = context;
         inflater = LayoutInflater.from(this.context);
     }
 
     public static interface Callback{
         public void close();
-    }
 
+        public void addIndex(int index);
+
+        public void removeIndex(int index);
+    }
 
     @Override
     public int getCount() {
@@ -57,7 +78,7 @@ public class CityManagerListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        CityManagerListViewHolder holder;
+        final CityManagerListViewHolder holder;
         if(view==null){
             holder = new CityManagerListViewHolder();
             view = inflater.inflate(R.layout.city_manage_activity_list_item, null);
@@ -69,27 +90,36 @@ public class CityManagerListViewAdapter extends BaseAdapter {
             holder.temperature_icon = (TextView)view.findViewById(R.id.city_manage_item_temperature_icon);
             holder.weather = (TextView)view.findViewById(R.id.city_manage_item_weather);
             holder.temperature_range = (TextView)view.findViewById(R.id.city_manage_item_temperature_range);
+            holder.box = (LinearLayout)view.findViewById(R.id.city_manage_item_box);
 
             holder.temperature.setTypeface(numberTypeface);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    WeatherService.cacheWeatherInfoId(context, list.get(i).getFormatted_address());
-                    callback.close();
-                }
-            });
-
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    return false;
+                    if(editable){
+                        if(removeSet.contains(i)){
+                            removeSet.remove(i);
+                            callback.removeIndex(i);
+                            holder.box.setBackgroundResource(R.drawable.shape_city_manage_activity_list_item);
+                        }else{
+                            removeSet.add(i);
+                            callback.addIndex(i);
+                            holder.box.setBackgroundResource(R.drawable.shape_city_manage_activity_list_item_remove);
+                        }
+                    }else{
+                        WeatherService.cacheWeatherInfoId(context, list.get(i).getFormatted_address());
+                        callback.close();
+                    }
                 }
             });
 
             view.setTag(holder);
         }else{
             holder = (CityManagerListViewHolder)view.getTag();
+        }
+        if(!editable){
+            holder.box.setBackgroundResource(R.drawable.shape_city_manage_activity_list_item);
         }
         WeatherService.WeatherInfo weatherInfo = WeatherService.analysisWeatherInfo(list.get(i).getHf_weather());
         WeatherService.HeWeather5Item heWeather5Item  = weatherInfo.HeWeather5.get(0);
