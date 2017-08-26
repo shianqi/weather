@@ -304,9 +304,6 @@ public class PageOne extends Fragment {
         }else if(
                 str.equals("阵雨")||
                         str.equals("强阵雨")||
-                        str.equals("雷阵雨")||
-                        str.equals("强雷阵雨")||
-                        str.equals("雷阵雨伴有冰雹")||
                         str.equals("小雨")||
                         str.equals("毛毛雨")||
                         str.equals("细雨")||
@@ -326,7 +323,6 @@ public class PageOne extends Fragment {
         }else if(
                 str.equals("多云")||
                 str.equals("晴间多云")||
-                str.equals("阴")||
                 str.equals("多云")||
                 str.equals("多云")
                 ){
@@ -342,6 +338,16 @@ public class PageOne extends Fragment {
                 str.equals("雨雪天气")
                 ){
             webview.loadUrl("javascript:changeWeather(6)");
+        }else if(
+                str.equals("阴")
+                ){
+            webview.loadUrl("javascript:changeWeather(7)");
+        }else if(
+                str.equals("雷阵雨")||
+                str.equals("强雷阵雨")||
+                str.equals("雷阵雨伴有冰雹")
+                ){
+            webview.loadUrl("javascript:changeWeather(8)");
         }
 
 

@@ -15,8 +15,6 @@ import com.shianqi.app.weather.Entity.LocationWeatherEntity;
 import com.shianqi.app.weather.R;
 import com.shianqi.app.weather.Service.SqlLiteService;
 import com.shianqi.app.weather.Service.WeatherService;
-import com.shianqi.app.weather.Utils.ToastManager;
-import org.w3c.dom.Text;
 
 import java.util.*;
 
@@ -79,8 +77,10 @@ public class CityManageActivity extends Activity {
                         int i = iterator.next();
                         LocationWeatherEntity entity = (LocationWeatherEntity) listItem.get(i);
                         Log.e("REMOVE", entity.getFormatted_address());
-                        list.add(entity);
-                        sqlLiteService.removeLocationInfo(entity.getFormatted_address());
+                        if(!WeatherService.getCacheWeatherILnfoId(CityManageActivity.this).equals(entity.getFormatted_address())){
+                            list.add(entity);
+                            sqlLiteService.removeLocationInfo(entity.getFormatted_address());
+                        }
                     }
                     listItem.removeAll(list);
                     city_manage_delete.setText("编辑");

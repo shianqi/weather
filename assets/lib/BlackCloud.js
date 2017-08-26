@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8,53 +8,42 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Thunder = function (_BaseElement) {
-    _inherits(Thunder, _BaseElement);
+var BlackCloud = function (_Point) {
+    _inherits(BlackCloud, _Point);
 
-    function Thunder() {
-        _classCallCheck(this, Thunder);
+    function BlackCloud(args) {
+        _classCallCheck(this, BlackCloud);
 
-        var _this = _possibleConstructorReturn(this, (Thunder.__proto__ || Object.getPrototypeOf(Thunder)).call(this));
+        var _this = _possibleConstructorReturn(this, (BlackCloud.__proto__ || Object.getPrototypeOf(BlackCloud)).call(this, args));
 
-        _this.alpha = 0;
-        _this.interval = 15;
-        _this.nowInterval = 0;
+        _this.x = Math.random() * _this.canvas.width - _this.canvas.width * 0.2;
+        _this.y = Math.random() * _this.canvas.height * 0.2;
+        _this.x_speed = Math.random() * 0.6 + 0.2;
+        _this.y_speed = 0;
+        _this.style = 'rgba(90,191,246,' + (Math.random() + 0.2) + ')';
+        _this.diameter = Math.random() * 2 + 1;
+
         return _this;
     }
 
-    _createClass(Thunder, [{
-        key: "draw",
+    _createClass(BlackCloud, [{
+        key: 'draw',
         value: function draw() {
-            if (Thunder.shouldDraw) {
-                this.ctx.fillStyle = "rgba(255,255,255," + this.alpha + ")";
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                this._nextPosition();
-            }
-        }
-    }, {
-        key: "makeWind",
-        value: function makeWind() {}
-    }, {
-        key: "_nextPosition",
-        value: function _nextPosition() {
-            if (Math.random() < 0.002) {
-                this.alpha = 0.7;
-                this.nowInterval = this.interval;
-            }
-
-            if (this.nowInterval > 1) {
-                this.nowInterval--;
-            } else if (this.nowInterval === 1) {
-                this.alpha = 1;
-                this.nowInterval = 0;
-            }
-            if (this.alpha >= 0) {
-                this.alpha = this.alpha - 0.06;
-            }
+            var cloud_element = document.createElement('img');
+            cloud_element.src = "./img/black_cloud_img.png";
+            this.ctx.beginPath();
+            this.ctx.lineCap = 'round';
+            this.ctx.lineWidth = this.diameter;
+            this.ctx.strokeStyle = this.style;
+            this.ctx.globalAlpha = 0.9;
+            this.ctx.drawImage(cloud_element, this.x - cloud_element.width / 2, this.y - cloud_element.height / 2);
+            this.ctx.globalAlpha = 1;
+            this.nextPosition();
+            this.ctx.stroke();
+            this.ctx.closePath();
+            this.shouldRemove();
         }
     }]);
 
-    return Thunder;
-}(BaseElement);
-
-Thunder.shouldDraw = false;
+    return BlackCloud;
+}(Point);

@@ -25,8 +25,8 @@ function Weather() {
 };
 
 Weather.prototype.draw = function () {
-    ctx.fillRect(0, 0, 100, 100);
     this.pointArray.push(new Background(this.mouse));
+    this.pointArray.push(new Thunder());
 
     canvas.addEventListener('touchstart', this.updateTouchStart.bind(this), {
         capture: false,
@@ -66,17 +66,30 @@ Weather.prototype.updateTouch = function (e) {
 };
 
 Weather.prototype.nextPosition = function () {
-
+    Thunder.shouldDraw = false;
     if (this.weather === 0) {
         this.addPoint(Snow, 1);
     } else if (this.weather === 1) {
         this.addPoint(Rain, 1);
+        this.addPoint(Cloud, 0.03);
+        this.addPoint(BlackCloud, 0.1);
     } else if (this.weather === 2) {
-        this.addPoint(Fog, 0.3);
+        this.addPoint(Fog, 0.5);
     } else if (this.weather === 3) {
         this.addPoint(Cloud, 0.1);
     } else if (this.weather === 4) {
         this.addPoint(SandStorm, 0.2);
+    } else if (this.weather === 6) {
+        this.addPoint(Rain, 1);
+        this.addPoint(Snow, 1);
+    } else if (this.weather === 7) {
+        this.addPoint(Cloud, 0.03);
+        this.addPoint(BlackCloud, 0.1);
+    } else if (this.weather === 8) {
+        this.addPoint(Rain, 1);
+        this.addPoint(Cloud, 0.03);
+        this.addPoint(BlackCloud, 0.1);
+        Thunder.shouldDraw = true;
     }
     for (var i = 0; i < this.pointArray.length; i++) {
         this.pointArray[i].draw();

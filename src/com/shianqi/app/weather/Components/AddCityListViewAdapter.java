@@ -99,7 +99,6 @@ public class AddCityListViewAdapter extends BaseAdapter {
                     entity.setLocation(tip.location);
                     entity.setHf_weather(weatherInfoString);
                     sqlLiteService.saveOrUpdateLocationInfo(entity);
-
                     callback.close();
                 }else{
                     ToastManager.toast(context, "暂无此城市天气数据");

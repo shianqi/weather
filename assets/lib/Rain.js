@@ -16,7 +16,7 @@ var Rain = function (_Point) {
 
         _this.x_speed = Math.random() - 0.5;
         _this.y_speed = Math.random() * 6 + 10;
-        _this.style = "rgba(90,191,246," + (Math.random() + 0.2) + ")";
+        _this.style = "rgba(180,221,246," + (Math.random() + 0.2) + ")";
         _this.diameter = Math.random() * 2 + 1;
         return _this;
     }
